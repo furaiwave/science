@@ -3,6 +3,7 @@ import type { ErrorInfo, ReactNode } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { logger } from '@/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -33,7 +34,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('❌ ErrorBoundary caught an error:', error, errorInfo);
+    logger.error('❌ ErrorBoundary caught an error:', error, errorInfo);
     this.setState({
       error,
       errorInfo
@@ -62,7 +63,7 @@ class ErrorBoundary extends Component<Props, State> {
         }
       }
     } catch (e) {
-      console.error('Error cleaning storage:', e);
+      logger.error('Error cleaning storage:', e);
     }
     
     // Перезагружаем страницу

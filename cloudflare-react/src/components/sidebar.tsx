@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { clearAllData } from "@/redux/slices/historySlice";
 import { clearAllAppData } from "@/redux/store";
 import { persistor } from "@/redux/store";
+import { logger } from "@/utils/logger";
 
 // ✅ Shadcn/ui Sidebar Components
 import {
@@ -56,7 +57,7 @@ export const AppSidebar: React.FC = () => {
             await persistor.purge();
             window.location.reload();
         } catch (error) {
-            console.error('Помилка при очищенні даних:', error);
+            logger.error('Помилка при очищенні даних:', error);
         }
     };
 

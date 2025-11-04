@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,19 +65,8 @@ const HistoryComponent: React.FC = () => {
     console.log('Сессии:', sessions.map(s => ({ id: s.id, title: s.title, date: s.updatedAt })));
   }
 
-  // Загрузка данных при монтировании компонента
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // Отслеживаем изменения selectedSession
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('selectedSession изменился:', selectedSession ? selectedSession.id : 'нет');
-    }
-  }, [selectedSession]);
-
-  const loadData = async () => {
+  // Функция загрузки данных обернута в useCallback
+  const loadData = useCallback(async () => {
     try {
       console.log('🟢 История: Загрузка данных...');
       clearError();
@@ -89,7 +78,19 @@ const HistoryComponent: React.FC = () => {
     } catch (err) {
       console.error('🔴 Помилка завантаження історії:', err);
     }
-  };
+  }, [clearError, loadSessions, loadStatistics]);
+
+  // Загрузка данных при монтировании компонента
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Отслеживаем изменения selectedSession
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('selectedSession изменился:', selectedSession ? selectedSession.id : 'нет');
+    }
+  }, [selectedSession]);
 
   const handleDeleteSession = async (sessionId: string) => {
     if (!confirm('Ви впевнені, що хочете видалити цю сесію?')) return;
