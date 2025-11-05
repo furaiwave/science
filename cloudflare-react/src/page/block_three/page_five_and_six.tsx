@@ -231,6 +231,11 @@ const ENPVCalculationTool: React.FC = () => {
       if (currentData.totalReconstructionCost <= 0) {
         throw new Error('Вартість реконструкції повинна бути більше 0');
       }
+      
+      // ⚠️ ПОПЕРЕДЖЕННЯ: якщо витрати на утримання не вказані
+      if (currentData.maintenanceCostsAfter === 0) {
+        console.warn('⚠️ УВАГА: Витрати на утримання після робіт (Вутр) не вказані. Розрахунок буде виконано, але результати можуть бути некоректними.');
+      }
   
       const detailedCondition: DetailedTechnicalCondition = {
         intensityCoefficient: currentData.trafficFlowIntensityCoefficient,
@@ -1259,6 +1264,7 @@ const ENPVCalculationTool: React.FC = () => {
                             value={currentData.maintenanceCostsBefore}
                             onChange={(e) => handleFieldChange('maintenanceCostsBefore', parseNumberInput(e.target.value, 0))}
                             className="w-full h-full border-0 text-xs text-center bg-transparent rounded-none"
+                            placeholder="Введіть витрати"
                             />
                         </td>
                         </tr>
@@ -1277,6 +1283,7 @@ const ENPVCalculationTool: React.FC = () => {
                             value={currentData.maintenanceCostsAfter}
                             onChange={(e) => handleFieldChange('maintenanceCostsAfter', parseNumberInput(e.target.value, 0))}
                             className="w-full h-full border-0 text-xs text-center bg-transparent rounded-none"
+                            placeholder="⚠️ ОБОВ'ЯЗКОВО введіть витрати"
                             />
                         </td>
                         </tr>
@@ -1384,6 +1391,18 @@ const ENPVCalculationTool: React.FC = () => {
                   </Card>
                 </div>
 
+                {/* ⚠️ ПОПЕРЕДЖЕННЯ: якщо витрати на утримання не вказані */}
+                {currentData && currentData.maintenanceCostsAfter === 0 && (
+                  <Alert className="bg-yellow-50 border-yellow-400 border-2">
+                    <AlertCircle className="h-5 w-5 text-yellow-600" />
+                    <AlertDescription className="text-yellow-800">
+                      <strong>⚠️ УВАГА!</strong> Витрати на експлуатаційне утримання після робіт (Вутр) не вказані або дорівнюють 0.
+                      <br />
+                      Це може призвести до некоректних результатів розрахунку. Рекомендується ввести реальні значення витрат на утримання в розділі "Вихідні дані".
+                    </AlertDescription>
+                  </Alert>
+                )}
+
                 {/* ✅ РОЗРАХУНОК ЗАЛИШКУ КОШТІВ НА РЕМОНТИ */}
                 {hasBlockOneData && hasBlockTwoData && blockTwoFunding && (
                   <Card className="bg-orange-50 border-2 border-orange-300">
@@ -1426,7 +1445,7 @@ const ENPVCalculationTool: React.FC = () => {
                           <div className="text-center p-4 bg-white rounded border">
                             <div className="text-sm text-gray-600 mb-1">Вартість проекту</div>
                             <div className="text-2xl font-bold text-red-700">
-                              {currentData.totalReconstructionCost.toLocaleString()} тис. грн
+                              {currentData.totalReconstructionCost.toFixed(2)} млн грн
                             </div>
                           </div>
                           
@@ -1558,10 +1577,10 @@ const ENPVCalculationTool: React.FC = () => {
                                   {Math.round(row.trafficIntensity).toLocaleString()}
                                 </td>
                                 <td className="border border-gray-400 text-right p-2">
-                                  {row.capitalCosts > 0 ? row.capitalCosts.toFixed(2) : '-'}
+                                  {row.capitalCosts.toFixed(2)}
                                 </td>
                                 <td className="border border-gray-400 text-right p-2">
-                                  {row.maintenanceCosts > 0 ? row.maintenanceCosts.toFixed(2) : '-'}
+                                  {row.maintenanceCosts.toFixed(2)}
                                 </td>
                                 <td className={`border border-gray-400 text-right p-2 ${row.economicEffect >= 0 ? 'text-green-700' : 'text-red-700'}`}>
                                   {row.economicEffect.toFixed(2)}
