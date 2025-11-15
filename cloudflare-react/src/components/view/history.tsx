@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,23 +65,24 @@ const HistoryComponent: React.FC = () => {
     console.log('Сессии:', sessions.map(s => ({ id: s.id, title: s.title, date: s.updatedAt })));
   }
 
+  // Функция для загрузки данных
+  const handleLoadData = async () => {
+    try {
+      console.log('🟢 История: Загрузка данных...');
+      clearError();
+      await Promise.all([
+        loadSessions(),
+        loadStatistics()
+      ]);
+      console.log('✅ Історія: Дані завантажені');
+    } catch (err) {
+      console.error('🔴 Помилка завантаження історії:', err);
+    }
+  };
+
   // Загрузка данных при монтировании компонента
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        console.log('🟢 История: Загрузка данных...');
-        clearError();
-        await Promise.all([
-          loadSessions(),
-          loadStatistics()
-        ]);
-        console.log('✅ Історія: Дані завантажені');
-      } catch (err) {
-        console.error('🔴 Помилка завантаження історії:', err);
-      }
-    };
-    
-    loadData();
+    handleLoadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Загружаем только при монтировании
 
@@ -281,7 +282,7 @@ const HistoryComponent: React.FC = () => {
                 Перегляд та управління збереженими результатами розрахунків у вигляді детальних таблиць
               </CardDescription>
             </div>
-            <Button onClick={loadData} variant="outline" className="flex items-center gap-2 border-indigo-300 hover:bg-indigo-50">
+            <Button onClick={handleLoadData} variant="outline" className="flex items-center gap-2 border-indigo-300 hover:bg-indigo-50">
               <RefreshCw className="h-4 w-4" />
               Оновити
             </Button>
