@@ -71,6 +71,9 @@ export interface InputRow {
   actualSurfaceEvenness: number;
   actualRutDepth: number;
   actualFrictionValue: number;
+  // Міста для побудови маршруту
+  startCity?: string;
+  endCity?: string;
 }
 
 export interface BlockThreeState {

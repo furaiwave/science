@@ -65,25 +65,25 @@ const HistoryComponent: React.FC = () => {
     console.log('Сессии:', sessions.map(s => ({ id: s.id, title: s.title, date: s.updatedAt })));
   }
 
-  // Функция загрузки данных обернута в useCallback
-  const loadData = useCallback(async () => {
-    try {
-      console.log('🟢 История: Загрузка данных...');
-      clearError();
-      await Promise.all([
-        loadSessions(),
-        loadStatistics()
-      ]);
-      console.log('✅ Історія: Дані завантажені');
-    } catch (err) {
-      console.error('🔴 Помилка завантаження історії:', err);
-    }
-  }, [clearError, loadSessions, loadStatistics]);
-
   // Загрузка данных при монтировании компонента
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        console.log('🟢 История: Загрузка данных...');
+        clearError();
+        await Promise.all([
+          loadSessions(),
+          loadStatistics()
+        ]);
+        console.log('✅ Історія: Дані завантажені');
+      } catch (err) {
+        console.error('🔴 Помилка завантаження історії:', err);
+      }
+    };
+    
     loadData();
-  }, [loadData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Загружаем только при монтировании
 
   // Отслеживаем изменения selectedSession
   useEffect(() => {

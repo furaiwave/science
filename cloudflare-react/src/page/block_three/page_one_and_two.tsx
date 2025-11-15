@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { parseNumberInput } from '@/utils/numberInput';
+import { getCityNames, cityExists } from '@/utils/ukraineCities';
 
 import {
   determineWorkTypeByTechnicalCondition,
@@ -40,6 +41,9 @@ interface InputRow {
   actualSurfaceEvenness: number;
   actualRutDepth: number;
   actualFrictionValue: number;
+  // Міста для побудови маршруту
+  startCity?: string;
+  endCity?: string;
 }
 
 interface ResultRow {
@@ -105,7 +109,9 @@ export const RoadTechnicalAssessment: React.FC<RoadTechnicalAssessmentProps> = (
       actualElasticModulus: 0,
       actualSurfaceEvenness: 0,
       actualRutDepth: 0,
-      actualFrictionValue: 0
+      actualFrictionValue: 0,
+      startCity: '',
+      endCity: ''
     };
     const newRows = [...inputRows, newRow];
     setInputRows(newRows);
@@ -340,6 +346,7 @@ export const RoadTechnicalAssessment: React.FC<RoadTechnicalAssessmentProps> = (
     return 'bg-red-100 text-red-800';
   };
 
+
   return (
     <div className="w-full space-y-1.5 md:space-y-2 xl:space-y-3">
       <div className="flex items-center justify-between">
@@ -407,12 +414,14 @@ export const RoadTechnicalAssessment: React.FC<RoadTechnicalAssessmentProps> = (
             <Table>
               <TableHeader>
                 <TableRow className="border-1 border-blue-600">
-                  <TableHead className="text-black text-center text-[10px] md:text-xs xl:text-sm" colSpan={10}>
+                  <TableHead className="text-black text-center text-[10px] md:text-xs xl:text-sm" colSpan={12}>
                     Визначення показників фактичного транспортно–експлуатаційного стану доріг державного значення
                   </TableHead>
                 </TableRow>
                 <TableRow>
                   <TableHead className="text-[10px] md:text-xs xl:text-xs p-1 md:p-2">Найменування ділянки дороги</TableHead>
+                  <TableHead className="text-[10px] md:text-xs xl:text-xs p-1 md:p-2 bg-green-50">📍 Від міста</TableHead>
+                  <TableHead className="text-[10px] md:text-xs xl:text-xs p-1 md:p-2 bg-green-50">📍 До міста</TableHead>
                   <TableHead className="text-[10px] md:text-xs xl:text-xs p-1 md:p-2">Протяжність (км)</TableHead>
                   <TableHead className="text-[10px] md:text-xs xl:text-xs p-1 md:p-2">Категорія</TableHead>
                   <TableHead className="text-[10px] md:text-xs xl:text-xs p-1 md:p-2">Інтенсивність (авт./добу)</TableHead>
@@ -434,6 +443,39 @@ export const RoadTechnicalAssessment: React.FC<RoadTechnicalAssessmentProps> = (
                         placeholder="М-06"
                         className="h-7 md:h-8 text-xs md:text-sm"
                       />
+                    </TableCell>
+                    {/* ПОЛЯ ДЛЯ МІСТ */}
+                    <TableCell className="p-1 md:p-2 bg-green-50">
+                      <Input
+                        value={row.startCity || ''}
+                        onChange={(e) => updateInputRow(row.id, 'startCity', e.target.value)}
+                        placeholder="Київ"
+                        list={`cities-start-${row.id}`}
+                        className={`h-7 md:h-8 w-24 md:w-28 text-xs md:text-sm ${
+                          row.startCity && !cityExists(row.startCity) ? 'border-red-500' : ''
+                        }`}
+                      />
+                      <datalist id={`cities-start-${row.id}`}>
+                        {getCityNames().map(city => (
+                          <option key={city} value={city} />
+                        ))}
+                      </datalist>
+                    </TableCell>
+                    <TableCell className="p-1 md:p-2 bg-green-50">
+                      <Input
+                        value={row.endCity || ''}
+                        onChange={(e) => updateInputRow(row.id, 'endCity', e.target.value)}
+                        placeholder="Чоп"
+                        list={`cities-end-${row.id}`}
+                        className={`h-7 md:h-8 w-24 md:w-28 text-xs md:text-sm ${
+                          row.endCity && !cityExists(row.endCity) ? 'border-red-500' : ''
+                        }`}
+                      />
+                      <datalist id={`cities-end-${row.id}`}>
+                        {getCityNames().map(city => (
+                          <option key={city} value={city} />
+                        ))}
+                      </datalist>
                     </TableCell>
                     <TableCell className="p-1 md:p-2">
                       <Input

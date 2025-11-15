@@ -1,3 +1,4 @@
+import React from 'react';
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
 import { 
@@ -115,17 +116,34 @@ export const useHistory = () => {
   const dispatch = useAppDispatch();
   const history = useAppSelector(state => state.history);
   
+  // Используем useCallback для мемоизации функций
+  const createSessionCallback = React.useCallback((title?: string, description?: string) => 
+    dispatch(createSession({ title, description })), [dispatch]);
+  
+  const loadSessionsCallback = React.useCallback(() => 
+    dispatch(loadUserSessions()), [dispatch]);
+  
+  const loadStatisticsCallback = React.useCallback(() => 
+    dispatch(loadStatistics()), [dispatch]);
+  
+  const deleteSessionCallback = React.useCallback((sessionId: string) => 
+    dispatch(deleteSession(sessionId)), [dispatch]);
+  
+  const exportSessionCallback = React.useCallback((sessionId: string) => 
+    dispatch(exportSession(sessionId)), [dispatch]);
+  
+  const clearErrorCallback = React.useCallback(() => 
+    dispatch(clearError()), [dispatch]);
+  
   return {
     ...history,
     dispatch,
-    // Удобные методы для работы с историей
-    createSession: (title?: string, description?: string) => 
-      dispatch(createSession({ title, description })),
-    loadSessions: () => dispatch(loadUserSessions()),
-    loadStatistics: () => dispatch(loadStatistics()),
-    deleteSession: (sessionId: string) => dispatch(deleteSession(sessionId)),
-    exportSession: (sessionId: string) => dispatch(exportSession(sessionId)),
-    clearError: () => dispatch(clearError()),
+    createSession: createSessionCallback,
+    loadSessions: loadSessionsCallback,
+    loadStatistics: loadStatisticsCallback,
+    deleteSession: deleteSessionCallback,
+    exportSession: exportSessionCallback,
+    clearError: clearErrorCallback,
   };
 };
 

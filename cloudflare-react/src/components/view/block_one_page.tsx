@@ -291,14 +291,16 @@ const StateRoadFundingBlock = ({
                   <TableCell className="font-medium">
                     <TooltipProvider>
                       <Tooltip>
-                        <TooltipTrigger asChild>
+                        <TooltipTrigger>
                           <div className="flex items-start">
                             <div style={{ whiteSpace: 'pre-line' }}>{item.name}</div>
                             <InfoCircledIcon className="ml-2 h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent className="max-w-md bg-black text-white">
-                          <p>{item.tooltip}</p>
+                        <TooltipContent>
+                          <div className="max-w-md bg-black text-white">
+                            <p>{item.tooltip}</p>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -476,14 +478,16 @@ const LocalRoadFundingBlock = ({
                   <TableCell className="font-medium">
                     <TooltipProvider>
                       <Tooltip>
-                        <TooltipTrigger asChild>
+                        <TooltipTrigger>
                           <div className="flex items-start">
                             <div style={{ whiteSpace: 'pre-line' }}>{item.name}</div>
                             <InfoCircledIcon className="ml-2 h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent className="max-w-md bg-black text-white">
-                          <p>{item.tooltip}</p>
+                        <TooltipContent>
+                          <div className="max-w-md bg-black text-white">
+                            <p>{item.tooltip}</p>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
