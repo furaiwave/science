@@ -9,7 +9,6 @@ import { parseNumberInput } from '@/utils/numberInput';
 
 import {
   BASE_REPAIR_COSTS,
-  calculateDetailedWorkCost,
   calculateDetailedWorkCostWithBreakdown,
   determineWorkTypeByTechnicalCondition,
   hasBlockOneBudgetData,

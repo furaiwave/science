@@ -638,35 +638,6 @@ export function calculateDetailedWorkCost(
   return Math.round(totalCost);
 }
 
-function calculateComplexityFactor(section: RoadSection, workType: string): number {
-  let factor = 1.0;
-  
-  if (workType === 'reconstruction') {
-    const maxIntensity = MAX_DESIGN_INTENSITY_BY_CATEGORY[section.category];
-    if (section.trafficIntensity > maxIntensity) {
-      const excessRatio = section.trafficIntensity / maxIntensity;
-      factor *= (1.0 + (excessRatio - 1.0) * 0.3);
-    }
-  }
-  
-  if (workType === 'capital_repair') {
-    const minStrength = MIN_STRENGTH_COEFFICIENT_BY_CATEGORY[section.category];
-    const actualStrength = section.detailedCondition.strengthCoefficient;
-    if (actualStrength < minStrength) {
-      const deficit = minStrength - actualStrength;
-      factor *= (1.0 + deficit * 0.5);
-    }
-  }
-  
-  if (section.hasLighting) factor *= 1.05;
-  if (section.nearBorderCrossing) factor *= 1.08;
-  if (section.criticalInfrastructureCount && section.criticalInfrastructureCount > 0) {
-    factor *= (1.0 + section.criticalInfrastructureCount * 0.02);
-  }
-  
-  return factor;
-}
-
 function getRegionalCostFactor(region: string): number {
   const factors: Record<string, number> = {
     'Київська': 1.20,
