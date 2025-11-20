@@ -579,33 +579,62 @@ function determineWorkTypeDetailed(comparisonResults: any, section: RoadSection)
 }
 
 /**
- * 4.2.4 - Детальний розрахунок вартості робіт
+ * 4.2.4 - Детальна інформація про розрахунок вартості робіт
+ */
+export interface CostBreakdown {
+  baseCost: number;
+  length: number;
+  baseCostTotal: number;
+  regionalFactor: number;
+  complexityFactor: number;
+  internationalFactor: number;
+  defenseFactor: number;
+  totalCorrections: number;
+  finalCost: number;
+}
+
+/**
+ * 4.2.4 - Детальний розрахунок вартості робіт з breakdown (БЕЗ коефіцієнтів)
+ */
+export function calculateDetailedWorkCostWithBreakdown(
+  section: RoadSection, 
+  workType: 'current_repair' | 'capital_repair' | 'reconstruction'
+): CostBreakdown {
+  const baseCost = BASE_REPAIR_COSTS[workType][section.category];
+  const baseCostTotal = baseCost * section.length;
+  
+  // Всі коефіцієнти = 1.0 (без коригувань)
+  const internationalFactor = 1.0;
+  const defenseFactor = 1.0;
+  const complexityFactor = 1.0;
+  const regionalFactor = 1.0;
+  const totalCorrections = 1.0;
+  
+  // Проста формула: базова вартість × протяжність
+  const finalCost = Math.round(baseCostTotal);
+  
+  return {
+    baseCost,
+    length: section.length,
+    baseCostTotal,
+    regionalFactor,
+    complexityFactor,
+    internationalFactor,
+    defenseFactor,
+    totalCorrections,
+    finalCost
+  };
+}
+
+/**
+ * 4.2.4 - Детальний розрахунок вартості робіт (БЕЗ коефіцієнтів)
  */
 export function calculateDetailedWorkCost(
   section: RoadSection, 
   workType: 'current_repair' | 'capital_repair' | 'reconstruction'
 ): number {
   const baseCost = BASE_REPAIR_COSTS[workType][section.category];
-  let totalCost = baseCost * section.length;
-  
-  let corrections = 1.0;
-  
-  if (section.isInternationalRoad || section.isEuropeanNetwork) {
-    corrections *= 1.15;
-  }
-  
-  if (section.isDefenseRoad) {
-    corrections *= 1.10;
-  }
-  
-  const complexityFactor = calculateComplexityFactor(section, workType);
-  corrections *= complexityFactor;
-  
-  const regionalFactor = getRegionalCostFactor(section.region);
-  corrections *= regionalFactor;
-  
-  totalCost *= corrections;
-  
+  const totalCost = baseCost * section.length;
   return Math.round(totalCost);
 }
 
@@ -1663,6 +1692,7 @@ export default {
   determineWorkTypeByExpertMethod,
   determineWorkTypeByTechnicalCondition,
   calculateDetailedWorkCost,
+  calculateDetailedWorkCostWithBreakdown,
   performDetailedCostBenefitAnalysis,
   
   // Розділ V - Нове будівництво

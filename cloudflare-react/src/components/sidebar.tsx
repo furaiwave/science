@@ -2,12 +2,13 @@ import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { Trash2, AlertTriangle, Home, Calculator, Wrench, Route, History } from "lucide-react";
+import { Trash2, AlertTriangle, Home, Calculator, Wrench, Route, History, FileDown } from "lucide-react";
 import { useAppDispatch } from "@/redux/hooks";
 import { clearAllData } from "@/redux/slices/historySlice";
 import { clearAllAppData } from "@/redux/store";
 import { persistor } from "@/redux/store";
 import { logger } from "@/utils/logger";
+import { generateUserManual } from "@/utils/generateUserManual";
 
 // ✅ Shadcn/ui Sidebar Components
 import {
@@ -114,6 +115,16 @@ export const AppSidebar: React.FC = () => {
                 <SidebarFooter className="relative z-10">
                     <div className="px-2 py-2 md:py-3 xl:py-4">
                         <div className="glass-divider mb-2 md:mb-3 xl:mb-4" />
+
+                        {/* Download User Manual Button */}
+                        <Button
+                            onClick={() => generateUserManual()}
+                            variant="outline"
+                            className="w-full mb-2 md:mb-3 text-xs md:text-sm xl:text-base py-2 md:py-2.5 bg-blue-50 hover:bg-blue-100 border-blue-200"
+                        >
+                            <FileDown className="h-3 w-3 md:h-4 md:w-4 xl:h-4 xl:w-4 mr-1.5 md:mr-2" />
+                            Завантажити інструкцію (DOCX)
+                        </Button>
 
                         {/* Clear Cache Button */}
                         <Button

@@ -10,11 +10,13 @@ import { parseNumberInput } from '@/utils/numberInput';
 import {
   BASE_REPAIR_COSTS,
   calculateDetailedWorkCost,
+  calculateDetailedWorkCostWithBreakdown,
   determineWorkTypeByTechnicalCondition,
   hasBlockOneBudgetData,
   getBudgetAllocation,
   type RoadSection,
-  type BudgetAllocation
+  type BudgetAllocation,
+  type CostBreakdown
 } from '@/modules/block_three';
 
 import { useAppSelector, useAppDispatch } from '@/redux/hooks';
@@ -41,6 +43,7 @@ interface CostCalculationRow {
   estimatedCost: number;
   isDefenseRoad?: boolean;
   isInternationalRoad?: boolean;
+  costBreakdown?: CostBreakdown;
 }
 
 const WORK_TYPE_NAMES = {
@@ -150,10 +153,12 @@ export const RoadCostIndicators: React.FC = () => {
         const workType = determineWorkTypeByTechnicalCondition(section);
         
         let estimatedCost = 0;
+        let costBreakdown: CostBreakdown | undefined;
         
         if (workType !== 'no_work_needed') {
-          // Використовуємо функцію з модуля для розрахунку вартості
-          estimatedCost = calculateDetailedWorkCost(section, workType);
+          // Використовуємо функцію з модуля для розрахунку вартості з деталями
+          costBreakdown = calculateDetailedWorkCostWithBreakdown(section, workType);
+          estimatedCost = costBreakdown.finalCost;
         }
 
         return {
@@ -165,7 +170,8 @@ export const RoadCostIndicators: React.FC = () => {
           workType: workType === 'no_work_needed' ? '' : workType,
           estimatedCost,
           isDefenseRoad: section.isDefenseRoad,
-          isInternationalRoad: section.isInternationalRoad
+          isInternationalRoad: section.isInternationalRoad,
+          costBreakdown
         };
       });
 
@@ -193,7 +199,8 @@ export const RoadCostIndicators: React.FC = () => {
     ];
 
     // Експорт розрахунків
-    const headers2 = ['Найменування', 'Протяжність (км)', 'Категорія', 'Вид робіт', 'Орієнтовна вартість (тис. грн)'];
+    const headers2 = ['Найменування', 'Протяжність (км)', 'Категорія', 'Регіон', 'Вид робіт', 
+                      'Базова вартість (тис.грн/км)', 'Орієнтовна вартість (тис. грн)'];
     const csvRows2 = calculated ? [
       '',
       'Орієнтовна вартість робіт',
@@ -204,6 +211,7 @@ export const RoadCostIndicators: React.FC = () => {
         row.category,
         `"${row.region}"`,
         `"${WORK_TYPE_NAMES[row.workType]}"`,
+        row.costBreakdown ? row.costBreakdown.baseCost : '',
         row.estimatedCost.toFixed(0)
       ].join(','))
     ] : [];
@@ -406,42 +414,63 @@ export const RoadCostIndicators: React.FC = () => {
                         Орієнтовна вартість робіт
                       </TableHead>
                     </TableRow>
-                    <TableRow>
-                      <TableHead className="text-[10px] md:text-xs xl:text-xs p-1 md:p-2">Найменування ділянки</TableHead>
+                    <TableRow className="bg-green-50">
+                      <TableHead className="text-xs p-2">Найменування ділянки</TableHead>
                       <TableHead className="text-xs text-center">Протяжність (км)</TableHead>
                       <TableHead className="text-xs text-center">Категорія</TableHead>
                       <TableHead className="text-xs text-center">Вид робіт</TableHead>
-                      <TableHead className="text-xs text-right">Вартість (тис. грн)</TableHead>
+                      <TableHead className="text-xs text-center bg-blue-50">Базова вартість<br/>(тис. грн/км)</TableHead>
+                      <TableHead className="text-xs text-right bg-yellow-50">Вартість<br/>(тис. грн)</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {costRows.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell className="text-sm">
+                      <TableRow key={row.id} className="hover:bg-gray-50">
+                        <TableCell className="text-sm p-2">
                           {row.roadName}
-                          {row.isDefenseRoad}
-                          {row.isInternationalRoad}
                         </TableCell>
                         <TableCell className="text-sm text-center">{row.length}</TableCell>
                         <TableCell className="text-sm text-center">{row.category}</TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="text-center p-1">
                           <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${WORK_TYPE_COLORS[row.workType]}`}>
                             {WORK_TYPE_NAMES[row.workType]}
                           </span>
                         </TableCell>
-                        <TableCell className="text-sm text-right font-medium">
+                        <TableCell className="text-sm text-center bg-blue-50">
+                          {row.costBreakdown ? row.costBreakdown.baseCost.toLocaleString() : '-'}
+                        </TableCell>
+                        <TableCell className="text-sm text-right font-bold bg-yellow-50">
                           {row.estimatedCost.toLocaleString('uk-UA', { maximumFractionDigits: 0 })}
                         </TableCell>
                       </TableRow>
                     ))}
-                    <TableRow className="bg-gray-100 font-bold">
-                      <TableCell colSpan={5} className="text-right">РАЗОМ:</TableCell>
-                      <TableCell className="text-right">
+                    <TableRow className="bg-green-100 font-bold">
+                      <TableCell colSpan={5} className="text-right text-sm">РАЗОМ:</TableCell>
+                      <TableCell className="text-right text-sm bg-green-200">
                         {totalEstimatedCost.toLocaleString('uk-UA', { maximumFractionDigits: 0 })}
                       </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
+              </div>
+
+              {/* Легенда розрахунку */}
+              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
+                <p className="font-semibold mb-2 text-blue-900">📊 Пояснення до розрахунку:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-blue-800">
+                  <div>
+                    <span className="font-medium">Базова вартість</span> - Нормативна вартість робіт на 1 км (тис. грн/км)
+                  </div>
+                  <div>
+                    <span className="font-medium">Протяжність</span> - Довжина ділянки дороги (км)
+                  </div>
+                  <div className="col-span-1 md:col-span-2">
+                    <span className="font-medium">Підсумок</span> = Базова вартість × Протяжність
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-blue-700 italic">
+                  Примітка: Розрахунок виконується без додаткових коригувальних коефіцієнтів
+                </p>
               </div>
 
               {/* Статистика */}
