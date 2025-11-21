@@ -10,6 +10,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import { useSelector } from 'react-redux';
 import {
   setLocalRoadBaseRate,
+  setLocalRoadBaseYear,
   addLocalInflationIndex,
   removeLocalInflationIndex,
   updateLocalInflationIndex,
@@ -18,6 +19,7 @@ import {
 } from '@/redux/slices/blockTwoSlice';
 import {
   selectLocalRoadBaseRate,
+  selectLocalRoadBaseYear,
   selectLocalInflationIndexes,
   selectLocalRoadRates,
   selectLocalCumulativeInflation
@@ -32,6 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import { handleNumberPaste, parseNumberInput } from '@/utils/numberInput';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface Block2LocalRoadsProps {
   // onCalculated?: () => void; // Убрано - автоматичні переходи відключені
 }
@@ -121,6 +124,7 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
 
   // ✅ ОПТИМІЗАЦІЯ: Використовуємо мемоізовані селектори
   const localRoadBaseRate = useSelector(selectLocalRoadBaseRate);
+  const localRoadBaseYear = useSelector(selectLocalRoadBaseYear);
   const localInflationIndexes = useSelector(selectLocalInflationIndexes);
   const localRoadRate = useSelector(selectLocalRoadRates);
   const cumulativeInflationMemoized = useSelector(selectLocalCumulativeInflation);
@@ -128,7 +132,6 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
   const [isYearSelectorOpen, setIsYearSelectorOpen] = React.useState(false);
   const [selectedStartYear, setSelectedStartYear] = React.useState<number>(2020);
   const [selectedEndYear, setSelectedEndYear] = React.useState<number>(new Date().getFullYear() - 1);
-  const [appliedStartYear, setAppliedStartYear] = React.useState<number>(2024); // Зберігаємо застосований початковий рік
 
   // ✅ ОПТИМІЗАЦІЯ: useCallback для запобігання ре-рендерам
   const addLocalInflationIndexHandler = useCallback(() => {
@@ -156,6 +159,10 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
     });
   }, [dispatch]);
 
+  const handleBaseYearChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch(setLocalRoadBaseYear(parseInt(e.target.value)));
+  }, [dispatch]);
+
   const applyYearRange = useCallback(() => {
     if (selectedStartYear > selectedEndYear) {
       toast.error('Помилка', {
@@ -169,9 +176,6 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
     // ✅ ОПТИМІЗАЦІЯ: Один dispatch замість багатьох
     const emptyYears = new Array(yearsToAdd).fill(0);
     dispatch(setLocalInflationIndexes(emptyYears));
-
-    // ✅ Зберігаємо вибраний початковий рік для правильного відображення
-    setAppliedStartYear(selectedStartYear);
 
     setIsYearSelectorOpen(false);
     toast.success('Роки додано', {
@@ -251,18 +255,35 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
       <CardContent>
         <div className="grid gap-6">
           <div className="grid gap-4">
-            <div>
-              <Label htmlFor="localRoadBaseRate">
-                Встановлений норматив річних фінансових витрат на ЕУ 1 км дороги II кат. місцевого значення в цінах 20ХХ року
-              </Label>
-              <Input
-                id="localRoadBaseRate"
-                type="number"
-                value={localRoadBaseRate}
-                onChange={handleBaseRateChange}
-                onPaste={handleBaseRatePaste}
-                className="mt-2"
-              />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="localRoadBaseRate">
+                  Встановлений норматив річних фінансових витрат на ЕУ 1 км дороги II кат. місцевого значення (тис. грн/км)
+                </Label>
+                <Input
+                  id="localRoadBaseRate"
+                  type="number"
+                  value={localRoadBaseRate}
+                  onChange={handleBaseRateChange}
+                  onPaste={handleBaseRatePaste}
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="localRoadBaseYear">
+                  Рік затвердження нормативу
+                </Label>
+                <select
+                  id="localRoadBaseYear"
+                  value={localRoadBaseYear}
+                  onChange={handleBaseYearChange}
+                  className="mt-2 w-full p-2 border rounded"
+                >
+                  {yearOptions.map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             
             <div>
@@ -350,7 +371,7 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
                   <InflationIndexField
                     key={i}
                     index={i}
-                    yearNumber={appliedStartYear + i}
+                    yearNumber={localRoadBaseYear + 1 + i}
                     value={inflationValue}
                     canRemove={localInflationIndexes.length > 1}
                     onChange={handleLocalInflationChange}

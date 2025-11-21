@@ -17,9 +17,11 @@ interface FundingResults {
 
 export interface BlockTwoState {
   stateRoadBaseRate: number;
+  stateRoadBaseYear: number; // Рік базового нормативу для державних доріг
   stateInflationIndexes: number[];
   stateRoadRates: RoadRates;
   localRoadBaseRate: number;
+  localRoadBaseYear: number; // Рік базового нормативу для місцевих доріг
   localInflationIndexes: number[];
   localRoadRates: RoadRates;
   selectedRegion: string;
@@ -35,6 +37,7 @@ export interface BlockTwoState {
 
 const initialState: BlockTwoState = {
   stateRoadBaseRate: 604.761,
+  stateRoadBaseYear: 2023, // За замовчуванням рік 2023
   stateInflationIndexes: [10],
   stateRoadRates: {
     category1: 0,
@@ -44,6 +47,7 @@ const initialState: BlockTwoState = {
     category5: 0,
   },
   localRoadBaseRate: 360.544,
+  localRoadBaseYear: 2023, // За замовчуванням рік 2023
   localInflationIndexes: [10],
   localRoadRates: {
     category1: 0,
@@ -70,6 +74,9 @@ const blockTwoSlice = createSlice({
     setStateRoadBaseRate: (state, action: PayloadAction<number>) => {
       state.stateRoadBaseRate = action.payload;
     },
+    setStateRoadBaseYear: (state, action: PayloadAction<number>) => {
+      state.stateRoadBaseYear = action.payload;
+    },
     setStateInflationIndexes: (state, action: PayloadAction<number[]>) => {
       state.stateInflationIndexes = action.payload;
     },
@@ -89,6 +96,9 @@ const blockTwoSlice = createSlice({
     },
     setLocalRoadBaseRate: (state, action: PayloadAction<number>) => {
       state.localRoadBaseRate = action.payload;
+    },
+    setLocalRoadBaseYear: (state, action: PayloadAction<number>) => {
+      state.localRoadBaseYear = action.payload;
     },
     setLocalInflationIndexes: (state, action: PayloadAction<number[]>) => {
       state.localInflationIndexes = action.payload;
@@ -149,12 +159,14 @@ const blockTwoSlice = createSlice({
 
 export const {
   setStateRoadBaseRate,
+  setStateRoadBaseYear,
   setStateInflationIndexes,
   addStateInflationIndex,
   removeStateInflationIndex,
   updateStateInflationIndex,
   setStateRoadRates,
   setLocalRoadBaseRate,
+  setLocalRoadBaseYear,
   setLocalInflationIndexes,
   addLocalInflationIndex,
   removeLocalInflationIndex,

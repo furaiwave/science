@@ -1,12 +1,10 @@
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle } from 'docx';
+import { Document, Packer, Paragraph, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, BorderStyle } from 'docx';
 import { saveAs } from 'file-saver';
 
 export async function generateUserManual() {
   const doc = new Document({
     sections: [
-      // ═══════════════════════════════════════════════════════════
       // ТИТУЛЬНА СТОРІНКА
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
@@ -18,9 +16,8 @@ export async function generateUserManual() {
               new TextRun({
                 text: "ІНСТРУКЦІЯ КОРИСТУВАЧА",
                 bold: true,
-                size: 52,
-                font: "Calibri",
-                color: "1F4E78"
+                size: 32,
+                font: "Times New Roman"
               })
             ],
             alignment: AlignmentType.CENTER,
@@ -30,34 +27,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "Програмний комплекс для розрахунку",
-                size: 34,
-                font: "Calibri",
-                color: "2E75B6"
-              })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 150 }
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "бюджетного фінансування",
-                size: 34,
-                font: "Calibri",
-                color: "2E75B6"
-              })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 150 }
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "автомобільних доріг",
-                size: 34,
-                font: "Calibri",
-                color: "2E75B6"
+                text: "Програмний комплекс для розрахунку бюджетного фінансування автомобільних доріг",
+                size: 28,
+                font: "Times New Roman"
               })
             ],
             alignment: AlignmentType.CENTER,
@@ -68,10 +40,8 @@ export async function generateUserManual() {
             children: [
               new TextRun({
                 text: `${new Date().toLocaleDateString('uk-UA')}`,
-                size: 30,
-                font: "Calibri",
-                bold: true,
-                color: "666666"
+                size: 28,
+                font: "Times New Roman"
               })
             ],
             alignment: AlignmentType.CENTER,
@@ -79,100 +49,118 @@ export async function generateUserManual() {
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 1: ЗАГАЛЬНА ІНФОРМАЦІЯ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "1. ЗАГАЛЬНА ІНФОРМАЦІЯ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "1. ЗАГАЛЬНА ІНФОРМАЦІЯ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
-            text: "1.1. Призначення програми",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "1.1. Призначення програми",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Програмний комплекс призначений для автоматизації розрахунків бюджетного фінансування автомобільних доріг згідно з діючими методиками та нормативними документами України.",
-                font: "Calibri",
-                size: 26
+                font: "Times New Roman",
+                size: 28
+              })
+            ],
+            spacing: { after: 200 }
+          }),
+          
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Програма дозволяє:",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
+              })
+            ],
+            spacing: { before: 150, after: 150 }
+          }),
+          
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "- Розраховувати обсяг бюджетного фінансування для державних та місцевих доріг;",
+                font: "Times New Roman",
+                size: 28
+              })
+            ],
+            spacing: { after: 100 }
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "- Визначати нормативи експлуатаційного утримання доріг з урахуванням регіональних коефіцієнтів;",
+                font: "Times New Roman",
+                size: 28
+              })
+            ],
+            spacing: { after: 100 }
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "- Планувати ремонти та реконструкцію доріг на основі технічних показників;",
+                font: "Times New Roman",
+                size: 28
+              })
+            ],
+            spacing: { after: 100 }
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "- Зберігати історію розрахунків та експортувати результати.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "Програма дозволяє:",
-            heading: HeadingLevel.HEADING_3,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 150 }
-          }),
-          
-          new Paragraph({
             children: [
               new TextRun({
-                text: "✓ Розраховувати обсяг бюджетного фінансування для державних та місцевих доріг",
-                font: "Calibri",
-                size: 24
+                text: "1.2. Системні вимоги",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
               })
             ],
-            spacing: { after: 120 }
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "✓ Визначати нормативи експлуатаційного утримання доріг з урахуванням регіональних коефіцієнтів",
-                font: "Calibri",
-                size: 24
-              })
-            ],
-            spacing: { after: 120 }
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "✓ Планувати ремонти та реконструкцію доріг на основі технічних показників",
-                font: "Calibri",
-                size: 24
-              })
-            ],
-            spacing: { after: 120 }
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "✓ Зберігати історію розрахунків та експортувати результати",
-                font: "Calibri",
-                size: 24
-              })
-            ],
-            spacing: { after: 250 }
-          }),
-          
-          new Paragraph({
-            text: "1.2. Системні вимоги",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Мінімальні вимоги:",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "1F4E78"
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             spacing: { after: 150 }
@@ -181,9 +169,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Веб-браузер: Google Chrome 90+, Mozilla Firefox 88+, Microsoft Edge 90+",
-                font: "Calibri",
-                size: 24
+                text: "- Веб-браузер: Google Chrome 90+, Mozilla Firefox 88+, Microsoft Edge 90+;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -191,9 +179,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Оперативна пам'ять: мінімум 4 ГБ",
-                font: "Calibri",
-                size: 24
+                text: "- Оперативна пам'ять: мінімум 4 ГБ;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -201,9 +189,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Роздільна здатність екрану: мінімум 1366x768 пікселів",
-                font: "Calibri",
-                size: 24
+                text: "- Роздільна здатність екрану: мінімум 1366x768 пікселів;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -211,9 +199,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Підключення до Інтернету",
-                font: "Calibri",
-                size: 24
+                text: "- Підключення до Інтернету;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -221,9 +209,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Включений JavaScript у браузері",
-                font: "Calibri",
-                size: 24
+                text: "- Включений JavaScript у браузері.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
@@ -233,10 +221,9 @@ export async function generateUserManual() {
             children: [
               new TextRun({
                 text: "Рекомендовані вимоги:",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "16A34A"
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             spacing: { after: 150 }
@@ -245,9 +232,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Google Chrome версії 100+ (найкраща сумісність)",
-                font: "Calibri",
-                size: 24
+                text: "- Google Chrome версії 100+ (найкраща сумісність);",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -255,9 +242,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• 8 ГБ оперативної пам'яті",
-                font: "Calibri",
-                size: 24
+                text: "- 8 ГБ оперативної пам'яті;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -265,9 +252,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Full HD екран (1920x1080) для комфортної роботи",
-                font: "Calibri",
-                size: 24
+                text: "- Full HD екран (1920x1080) для комфортної роботи.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -275,96 +262,106 @@ export async function generateUserManual() {
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 2: ПОЧАТОК РОБОТИ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "2. ПОЧАТОК РОБОТИ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "2. ПОЧАТОК РОБОТИ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
-            text: "2.1. Вхід до системи",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "2.1. Вхід до системи",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "1️⃣ Відкрийте веб-браузер та перейдіть за адресою програми",
-                font: "Calibri",
-                size: 24
+                text: "1. Відкрийте веб-браузер та перейдіть за адресою програми.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "2️⃣ На головній сторінці з'являться доступні розділи програми",
-                font: "Calibri",
-                size: 24
+                text: "2. На головній сторінці з'являться доступні розділи програми.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "3️⃣ Оберіть необхідний розділ з меню навігації",
-                font: "Calibri",
-                size: 24
+                text: "3. Оберіть необхідний розділ з меню навігації.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "2.2. Структура програми",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "2.2. Структура програми",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Програма складається з основних розділів:",
-                font: "Calibri",
-                size: 26,
+                font: "Times New Roman",
+                size: 28
+              })
+            ],
+            spacing: { after: 150 }
+          }),
+          
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Розділ I. Бюджетне фінансування доріг",
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 200 }
-          }),
-          
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "📊 Розділ I: Бюджетне фінансування доріг",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
-              })
-            ],
             spacing: { after: 80 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "Розрахунок Q₁ (державні дороги) та Q₂ (місцеві дороги)",
-                font: "Calibri",
-                size: 24,
-                italics: true
+                text: "Розрахунок Q1 (державні дороги) та Q2 (місцеві дороги).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 150 }
@@ -373,11 +370,10 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "🔧 Розділ II: Експлуатаційне утримання",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Розділ II. Експлуатаційне утримання",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             spacing: { after: 80 }
@@ -385,10 +381,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "Розрахунок нормативів утримання з урахуванням коефіцієнтів",
-                font: "Calibri",
-                size: 24,
-                italics: true
+                text: "Розрахунок нормативів утримання з урахуванням коефіцієнтів.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 150 }
@@ -397,11 +392,10 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "🛣 Розділ III: Планування ремонтів",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Розділ III. Планування ремонтів",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             spacing: { after: 80 }
@@ -409,10 +403,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "Аналіз технічного стану та розрахунок вартості робіт",
-                font: "Calibri",
-                size: 24,
-                italics: true
+                text: "Аналіз технічного стану та розрахунок вартості робіт.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 150 }
@@ -421,11 +414,10 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "📜 Історія розрахунків",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Історія розрахунків",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             spacing: { after: 80 }
@@ -433,10 +425,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "Перегляд збережених результатів та експорт даних",
-                font: "Calibri",
-                size: 24,
-                italics: true
+                text: "Перегляд збережених результатів та експорт даних.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
@@ -444,47 +435,53 @@ export async function generateUserManual() {
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 3: БЮДЖЕТНЕ ФІНАНСУВАННЯ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "3. РОЗДІЛ I: БЮДЖЕТНЕ ФІНАНСУВАННЯ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "3. РОЗДІЛ I: БЮДЖЕТНЕ ФІНАНСУВАННЯ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
-          }),
-          
-          new Paragraph({
-            text: "3.1. Державні дороги (Q₁)",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "➤ КРОК 1: Введення даних",
-                font: "Calibri",
-                size: 28,
+                text: "3.1. Державні дороги (Q1)",
                 bold: true,
-                color: "FFFFFF"
+                size: 28,
+                font: "Times New Roman"
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 200 },
-            shading: { fill: "2E75B6" }
+            spacing: { before: 250, after: 200 }
+          }),
+          
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Крок 1. Введення даних",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
+              })
+            ],
+            spacing: { before: 150, after: 150 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "У таблиці \"Державні дороги загального користування\" введіть значення для кожного показника:",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 150 }
@@ -493,9 +490,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Показники бюджетного фінансування (Q₁₁ - Q₁₈)",
-                font: "Calibri",
-                size: 24
+                text: "- Показники бюджетного фінансування (Q11 - Q18);",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -503,9 +500,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Нормативні документи для кожного показника",
-                font: "Calibri",
-                size: 24
+                text: "- Нормативні документи для кожного показника;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -513,9 +510,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Завантаження файлів-підтверджень (за необхідності)",
-                font: "Calibri",
-                size: 24
+                text: "- Завантаження файлів-підтверджень (за необхідності).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
@@ -524,24 +521,21 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "➤ КРОК 2: Розрахунок",
-                font: "Calibri",
+                text: "Крок 2. Розрахунок",
+                font: "Times New Roman",
                 size: 28,
-                bold: true,
-                color: "FFFFFF"
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 200 },
-            shading: { fill: "2E75B6" }
+            spacing: { before: 150, after: 150 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Після введення даних натисніть кнопку \"Розрахувати\".",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 120 }
@@ -551,8 +545,8 @@ export async function generateUserManual() {
             children: [
               new TextRun({
                 text: "Програма автоматично:",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
@@ -562,9 +556,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Перевірить коректність введених даних",
-                font: "Calibri",
-                size: 24
+                text: "- Перевірить коректність введених даних;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -572,9 +566,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Виконає розрахунок за формулою",
-                font: "Calibri",
-                size: 24
+                text: "- Виконає розрахунок за формулою;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
@@ -582,488 +576,321 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "• Відобразить результат у виділеному блоці",
-                font: "Calibri",
-                size: 24
+                text: "- Відобразить результат у виділеному блоці.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
           }),
           
-          // Формула Q1
           new Paragraph({
             children: [
               new TextRun({
-                text: "Q",
-                font: "Calibri",
-                size: 32,
-                bold: true,
-                color: "1F4E78"
-              }),
-              new TextRun({
-                text: "₁",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78",
-                subScript: true
-              }),
-              new TextRun({
-                text: " = Σ(Q",
-                font: "Calibri",
-                size: 32,
-                bold: true,
-                color: "1F4E78"
-              }),
-              new TextRun({
-                text: "₁₁",
-                font: "Calibri",
-                size: 22,
-                bold: true,
-                color: "1F4E78",
-                subScript: true
-              }),
-              new TextRun({
-                text: " + Q",
-                font: "Calibri",
-                size: 32,
-                bold: true,
-                color: "1F4E78"
-              }),
-              new TextRun({
-                text: "₁₂",
-                font: "Calibri",
-                size: 22,
-                bold: true,
-                color: "1F4E78",
-                subScript: true
-              }),
-              new TextRun({
-                text: " + Q",
-                font: "Calibri",
-                size: 32,
-                bold: true,
-                color: "1F4E78"
-              }),
-              new TextRun({
-                text: "₁₃",
-                font: "Calibri",
-                size: 22,
-                bold: true,
-                color: "1F4E78",
-                subScript: true
-              }),
-              new TextRun({
-                text: " + ... + Q",
-                font: "Calibri",
-                size: 32,
-                bold: true,
-                color: "1F4E78"
-              }),
-              new TextRun({
-                text: "₁₈",
-                font: "Calibri",
-                size: 22,
-                bold: true,
-                color: "1F4E78",
-                subScript: true
-              }),
-              new TextRun({
-                text: ")",
-                font: "Calibri",
-                size: 32,
-                bold: true,
-                color: "1F4E78"
+                text: "Q1 = Σ(Q11 + Q12 + Q13 + ... + Q18)",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 150 },
-            border: {
-              top: { style: BorderStyle.DOUBLE, size: 15, color: "2E75B6" },
-              bottom: { style: BorderStyle.DOUBLE, size: 15, color: "2E75B6" },
-              left: { style: BorderStyle.DOUBLE, size: 15, color: "2E75B6" },
-              right: { style: BorderStyle.DOUBLE, size: 15, color: "2E75B6" }
-            },
-            shading: { fill: "E0F2FE" }
+            spacing: { before: 150, after: 150 }
           }),
           
           new Paragraph({ text: "", spacing: { after: 250 } }),
           
           new Paragraph({
-            text: "3.2. Місцеві дороги (Q₂)",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "3.2. Місцеві дороги (Q2)",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "Аналогічно розділу 3.1, заповніть таблицю для місцевих доріг з показниками Q₂₁ - Q₂₈ та виконайте розрахунок.",
-                font: "Calibri",
-                size: 24
+                text: "Аналогічно розділу 3.1, заповніть таблицю для місцевих доріг з показниками Q21 - Q28 та виконайте розрахунок.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "3.3. Загальний бюджет",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "3.3. Загальний бюджет",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "Після розрахунку Q₁ та Q₂, програма автоматично обчислить загальний бюджет:",
-                font: "Calibri",
-                size: 24
+                text: "Після розрахунку Q1 та Q2, програма автоматично обчислить загальний бюджет:",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
           }),
           
-          // Формула Q = Q1 + Q2
           new Paragraph({
             children: [
               new TextRun({
-                text: "Q = Q",
-                font: "Calibri",
-                size: 36,
-                bold: true,
-                color: "1F4E78"
-              }),
-              new TextRun({
-                text: "₁",
-                font: "Calibri",
+                text: "Q = Q1 + Q2",
+                font: "Times New Roman",
                 size: 28,
-                bold: true,
-                color: "1F4E78",
-                subScript: true
-              }),
-              new TextRun({
-                text: " + Q",
-                font: "Calibri",
-                size: 36,
-                bold: true,
-                color: "1F4E78"
-              }),
-              new TextRun({
-                text: "₂",
-                font: "Calibri",
-                size: 28,
-                bold: true,
-                color: "1F4E78",
-                subScript: true
+                bold: true
               })
             ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-              top: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" },
-              bottom: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" },
-              left: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" },
-              right: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" }
-            },
-            shading: { fill: "DCFCE7" }
+            spacing: { before: 150, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "⚠ ВАЖЛИВО:",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "DC2626"
+                text: "ВАЖЛИВО: ",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               }),
               new TextRun({
-                text: " Дані з Розділу I автоматично передаються в наступні розділи.",
-                font: "Calibri",
-                size: 24
+                text: "Дані з Розділу I автоматично передаються в наступні розділи.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { before: 200, after: 250 }
           }),
           
           new Paragraph({
-            text: "3.4. Детальний опис показників",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "3.4. Детальний опис показників",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "📋 ПОКАЗНИКИ ДЛЯ ДЕРЖАВНИХ ДОРІГ",
-                font: "Calibri",
+                text: "Показники для державних доріг:",
+                font: "Times New Roman",
                 size: 28,
-                bold: true,
-                color: "FFFFFF"
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 250 },
-            shading: { fill: "2E75B6" }
+            spacing: { before: 150, after: 150 }
           }),
           
-          // Q11
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₁", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Утримання доріг державного значення", font: "Calibri", size: 26, bold: true, color: "1F4E78" })
+              new TextRun({ text: "Q11 - Утримання доріг державного значення", font: "Times New Roman", size: 28, bold: true })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "E0F2FE" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Включає витрати на поточне утримання автомобільних доріг. Розраховується на основі протяжності доріг та нормативів утримання.",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
           }),
           
-          // Q12
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₂", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Поточний ремонт", font: "Calibri", size: 26, bold: true, color: "1F4E78" })
+              new TextRun({ text: "Q12 - Поточний ремонт", font: "Times New Roman", size: 28, bold: true })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "E0F2FE" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Витрати на ремонт ямкових вибоїн, тріщин, вирівнювання поверхні.",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
           }),
           
-          // Q13
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₃", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Капітальний ремонт", font: "Calibri", size: 26, bold: true, color: "1F4E78" })
+              new TextRun({ text: "Q13 - Капітальний ремонт", font: "Times New Roman", size: 28, bold: true })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "E0F2FE" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Витрати на відновлення транспортно-експлуатаційних характеристик дороги: заміна дорожнього одягу.",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
           }),
           
-          // Q14
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₄", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Реконструкція", font: "Calibri", size: 26, bold: true, color: "1F4E78" })
+              new TextRun({ text: "Q14 - Реконструкція", font: "Times New Roman", size: 28, bold: true })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "E0F2FE" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Витрати на підвищення категорії дороги, розширення проїзної частини.",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
           }),
           
-          // Q15-Q18 коротко
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₅", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Нове будівництво  |  ", font: "Calibri", size: 24 }),
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₆", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Штучні споруди", font: "Calibri", size: 24 })
+              new TextRun({ text: "Q15 - Нове будівництво", font: "Times New Roman", size: 28, bold: true })
             ],
-            spacing: { after: 100 },
-            shading: { fill: "E0F2FE" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₇", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Служби  |  ", font: "Calibri", size: 24 }),
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true, color: "1F4E78" }),
-              new TextRun({ text: "₁₈", font: "Calibri", size: 20, bold: true, color: "1F4E78", subScript: true }),
-              new TextRun({ text: " - Інші витрати", font: "Calibri", size: 24 })
+              new TextRun({ text: "Q16 - Штучні споруди", font: "Times New Roman", size: 28, bold: true })
             ],
-            spacing: { after: 300 },
-            shading: { fill: "E0F2FE" }
+            spacing: { after: 100 }
           }),
-          
           new Paragraph({
-            text: "3.5. Приклад розрахунку",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({ text: "Q17 - Служби", font: "Times New Roman", size: 28, bold: true })
+            ],
+            spacing: { after: 100 }
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({ text: "Q18 - Інші витрати", font: "Times New Roman", size: 28, bold: true })
+            ],
+            spacing: { after: 300 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "💡 ПРИКЛАД",
-                font: "Calibri",
-                size: 28,
+                text: "3.5. Приклад розрахунку",
                 bold: true,
-                color: "FFFFFF"
+                size: 28,
+                font: "Times New Roman"
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 200 },
-            shading: { fill: "16A34A" }
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true }),
-              new TextRun({ text: "₁₁", font: "Calibri", size: 20, bold: true, subScript: true }),
-              new TextRun({ text: " (Утримання) = ", font: "Calibri", size: 24 }),
-              new TextRun({ text: "150,000", font: "Calibri", size: 26, bold: true, color: "16A34A" }),
-              new TextRun({ text: " тис. грн", font: "Calibri", size: 24 })
+              new TextRun({ text: "Q11 (Утримання) = 150 000 тис. грн", font: "Times New Roman", size: 28 })
             ],
-            alignment: AlignmentType.CENTER,
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true }),
-              new TextRun({ text: "₁₂", font: "Calibri", size: 20, bold: true, subScript: true }),
-              new TextRun({ text: " (Поточний ремонт) = ", font: "Calibri", size: 24 }),
-              new TextRun({ text: "85,000", font: "Calibri", size: 26, bold: true, color: "16A34A" }),
-              new TextRun({ text: " тис. грн", font: "Calibri", size: 24 })
+              new TextRun({ text: "Q12 (Поточний ремонт) = 85 000 тис. грн", font: "Times New Roman", size: 28 })
             ],
-            alignment: AlignmentType.CENTER,
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 26, bold: true }),
-              new TextRun({ text: "₁₃", font: "Calibri", size: 20, bold: true, subScript: true }),
-              new TextRun({ text: " (Капітальний ремонт) = ", font: "Calibri", size: 24 }),
-              new TextRun({ text: "120,000", font: "Calibri", size: 26, bold: true, color: "16A34A" }),
-              new TextRun({ text: " тис. грн", font: "Calibri", size: 24 })
+              new TextRun({ text: "Q13 (Капітальний ремонт) = 120 000 тис. грн", font: "Times New Roman", size: 28 })
             ],
-            alignment: AlignmentType.CENTER,
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "... інші показники ...",
-                font: "Calibri",
-                size: 22,
-                italics: true,
-                color: "666666"
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            alignment: AlignmentType.CENTER,
             spacing: { after: 150 }
           }),
           
           new Paragraph({
             children: [
-              new TextRun({
-                text: "═══════════════════════════════════",
-                font: "Calibri",
-                size: 26,
-                color: "2E75B6"
-              })
+              new TextRun({ text: "Q1 = 950 000 тис. грн", font: "Times New Roman", size: 28, bold: true })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 150 }
-          }),
-          
-          new Paragraph({
-            children: [
-              new TextRun({ text: "Q", font: "Calibri", size: 36, bold: true, color: "16A34A" }),
-              new TextRun({ text: "₁", font: "Calibri", size: 28, bold: true, color: "16A34A", subScript: true }),
-              new TextRun({ text: " = 950,000 тис. грн", font: "Calibri", size: 36, bold: true, color: "16A34A" })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 150 },
-            shading: { fill: "DCFCE7" },
-            border: {
-              top: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" },
-              bottom: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" },
-              left: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" },
-              right: { style: BorderStyle.DOUBLE, size: 18, color: "16A34A" }
-            }
+            spacing: { before: 150, after: 150 }
           }),
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 4: ЕКСПЛУАТАЦІЙНЕ УТРИМАННЯ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "4. РОЗДІЛ II: ЕКСПЛУАТАЦІЙНЕ УТРИМАННЯ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "4. РОЗДІЛ II: ЕКСПЛУАТАЦІЙНЕ УТРИМАННЯ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
-          }),
-          
-          new Paragraph({
-            text: "4.1. Вибір параметрів",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "1️⃣ Виберіть тип доріг:",
-                font: "Calibri",
-                size: 26,
+                text: "4.1. Вибір параметрів",
                 bold: true,
-                color: "1F4E78"
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
+          }),
+          
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "1. Виберіть тип доріг:",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             spacing: { after: 120 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Державні дороги", font: "Calibri", size: 24, bold: true }),
-              new TextRun({ text: " - для розрахунку нормативів державних доріг", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Державні дороги - для розрахунку нормативів державних доріг;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Місцеві дороги", font: "Calibri", size: 24, bold: true }),
-              new TextRun({ text: " - для розрахунку нормативів місцевих доріг", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Місцеві дороги - для розрахунку нормативів місцевих доріг.", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 250 }
           }),
@@ -1071,11 +898,10 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "2️⃣ Оберіть область (регіон)",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "1F4E78"
+                text: "2. Оберіть область (регіон)",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             spacing: { after: 120 }
@@ -1084,56 +910,66 @@ export async function generateUserManual() {
             children: [
               new TextRun({
                 text: "Для кожної області застосовуються індивідуальні коригувальні коефіцієнти.",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "4.2. Введення індексів інфляції",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "4.2. Введення індексів інфляції",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Введіть індекси інфляції для кожного року. Програма автоматично розрахує:",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 150 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Добуток індексів інфляції", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Добуток індексів інфляції;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Коригування базового нормативу на інфляцію", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Коригування базового нормативу на інфляцію.", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "4.3. Результати розрахунку",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "4.3. Результати розрахунку",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Програма виведе:",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
@@ -1141,552 +977,465 @@ export async function generateUserManual() {
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Нормативи для кожної категорії доріг (I-V)", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Нормативи для кожної категорії доріг (I-V);", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Загальне фінансування з урахуванням протяжності доріг", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Загальне фінансування з урахуванням протяжності доріг;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Детальну таблицю з регіональними результатами", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Детальну таблицю з регіональними результатами;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "• Таблицю коригувальних коефіцієнтів", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Таблицю коригувальних коефіцієнтів.", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 250 }
           }),
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 5: ПЛАНУВАННЯ РЕМОНТІВ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "5. РОЗДІЛ III: ПЛАНУВАННЯ РЕМОНТІВ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "5. РОЗДІЛ III: ПЛАНУВАННЯ РЕМОНТІВ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
-            text: "5.1. Введення даних про ділянки доріг",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "5.1. Введення даних про ділянки доріг",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Для кожної ділянки введіть наступні дані:",
-                font: "Calibri",
-                size: 26,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 200 }
+            spacing: { after: 150 }
           }),
           
-          // Найменування
           new Paragraph({
             children: [
               new TextRun({
-                text: "🛣 Найменування ділянки дороги",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "FFFFFF"
+                text: "Найменування ділянки дороги",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 120 },
-            shading: { fill: "2E75B6" }
+            spacing: { before: 150, after: 120 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Класифікація доріг:",
-                font: "Calibri",
-                size: 24,
-                bold: true
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "М-XX", font: "Calibri", size: 24, bold: true, color: "DC2626" }),
-              new TextRun({ text: " - міжнародні дороги (М-01, М-05, М-06)", font: "Calibri", size: 24 })
+              new TextRun({ text: "- М-XX - міжнародні дороги (М-01, М-05, М-06);", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 80 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "Н-XX", font: "Calibri", size: 24, bold: true, color: "DC2626" }),
-              new TextRun({ text: " - національні дороги (Н-01, Н-14)", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Н-XX - національні дороги (Н-01, Н-14);", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 80 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "Р-XX", font: "Calibri", size: 24, bold: true, color: "DC2626" }),
-              new TextRun({ text: " - регіональні дороги (Р-06, Р-15)", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Р-XX - регіональні дороги (Р-06, Р-15).", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 250 }
           }),
           
-          // Протяжність
           new Paragraph({
             children: [
               new TextRun({
-                text: "📏 Протяжність (км)",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "FFFFFF"
+                text: "Протяжність (км)",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 120 },
-            shading: { fill: "2E75B6" }
+            spacing: { before: 150, after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Довжина ділянки в кілометрах. Діапазон: 0.1 - 1000 км.",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
-          // Категорія
           new Paragraph({
             children: [
               new TextRun({
-                text: "📊 Категорія дороги",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "FFFFFF"
+                text: "Категорія дороги",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 120 },
-            shading: { fill: "2E75B6" }
+            spacing: { before: 150, after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "I", font: "Calibri", size: 24, bold: true }),
-              new TextRun({ text: " - автомагістралі, 150 км/год", font: "Calibri", size: 24 })
+              new TextRun({ text: "- I - автомагістралі, 150 км/год;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 80 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "II", font: "Calibri", size: 24, bold: true }),
-              new TextRun({ text: " - висока інтенсивність, 120 км/год", font: "Calibri", size: 24 })
+              new TextRun({ text: "- II - висока інтенсивність, 120 км/год;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 80 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "III", font: "Calibri", size: 24, bold: true }),
-              new TextRun({ text: " - середня інтенсивність, 100 км/год", font: "Calibri", size: 24 })
+              new TextRun({ text: "- III - середня інтенсивність, 100 км/год;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 80 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "IV-V", font: "Calibri", size: 24, bold: true }),
-              new TextRun({ text: " - низька інтенсивність, 60-80 км/год", font: "Calibri", size: 24 })
+              new TextRun({ text: "- IV-V - низька інтенсивність, 60-80 км/год.", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 250 }
           }),
           
-          // Інші параметри компактно
           new Paragraph({
             children: [
               new TextRun({
-                text: "🚗 Інтенсивність руху",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Інтенсивність руху - ",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               }),
               new TextRun({
-                text: " - середньодобова інтенсивність (авт./добу)",
-                font: "Calibri",
-                size: 24
+                text: "середньодобова інтенсивність (авт./добу).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "F0F9FF" }
+            spacing: { after: 100 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "⚡ Модуль пружності",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Модуль пружності - ",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               }),
               new TextRun({
-                text: " - характеристика міцності покриття (МПа)",
-                font: "Calibri",
-                size: 24
+                text: "характеристика міцності покриття (МПа).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "F0F9FF" }
+            spacing: { after: 100 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "📐 Рівність покриття",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Рівність покриття - ",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               }),
               new TextRun({
-                text: " - якість дорожнього покриття (м/км або см/км)",
-                font: "Calibri",
-                size: 24
+                text: "якість дорожнього покриття (м/км або см/км).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "F0F9FF" }
+            spacing: { after: 100 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "⚠ Глибина колії",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Глибина колії - ",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               }),
               new TextRun({
-                text: " - максимальна глибина колій (мм)",
-                font: "Calibri",
-                size: 24
+                text: "максимальна глибина колій (мм).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "F0F9FF" }
+            spacing: { after: 100 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "🔒 Коефіцієнт зчеплення",
-                font: "Calibri",
-                size: 24,
-                bold: true,
-                color: "1F4E78"
+                text: "Коефіцієнт зчеплення - ",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               }),
               new TextRun({
-                text: " - протиковзкі властивості (мінімум 0.35)",
-                font: "Calibri",
-                size: 24
+                text: "протиковзкі властивості (мінімум 0.35).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 250 },
-            shading: { fill: "F0F9FF" }
+            spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "5.2. Визначення виду робіт",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "5.2. Визначення виду робіт",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Програма автоматично визначає вид робіт:",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 200 }
+            spacing: { after: 150 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "🔴 Реконструкція",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "DC2626"
-              }),
-              new TextRun({
-                text: " - якщо інтенсивність перевищує допустиму",
-                font: "Calibri",
-                size: 24
+                text: "- Реконструкція - якщо інтенсивність перевищує допустиму;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "🟡 Капітальний ремонт",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "CA8A04"
-              }),
-              new TextRun({
-                text: " - якщо міцність нижче нормативу",
-                font: "Calibri",
-                size: 24
+                text: "- Капітальний ремонт - якщо міцність нижче нормативу;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "🔵 Поточний ремонт",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "2563EB"
-              }),
-              new TextRun({
-                text: " - якщо рівність або зчеплення нижче норми",
-                font: "Calibri",
-                size: 24
+                text: "- Поточний ремонт - якщо рівність або зчеплення нижче норми.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "5.3. Розрахунок вартості робіт",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "5.3. Розрахунок вартості робіт",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "📐 ФОРМУЛА РОЗРАХУНКУ",
-                font: "Calibri",
+                text: "Формула розрахунку:",
+                font: "Times New Roman",
                 size: 28,
-                bold: true,
-                color: "FFFFFF"
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 200 },
-            shading: { fill: "1F4E78" }
+            spacing: { after: 150 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Вартість = Базова вартість × Протяжність",
-                font: "Calibri",
-                size: 34,
-                bold: true,
-                color: "1F4E78"
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-              top: { style: BorderStyle.DOUBLE, size: 18, color: "2E75B6" },
-              bottom: { style: BorderStyle.DOUBLE, size: 18, color: "2E75B6" },
-              left: { style: BorderStyle.DOUBLE, size: 18, color: "2E75B6" },
-              right: { style: BorderStyle.DOUBLE, size: 18, color: "2E75B6" }
-            },
-            shading: { fill: "E0F2FE" }
+            spacing: { before: 150, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "💡 ПРИКЛАД РОЗРАХУНКУ",
-                font: "Calibri",
+                text: "Приклад розрахунку:",
+                font: "Times New Roman",
                 size: 28,
-                bold: true,
-                color: "FFFFFF"
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 200 },
-            shading: { fill: "16A34A" }
+            spacing: { before: 250, after: 150 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Дорога М-05, категорія II, протяжність 456 км",
-                font: "Calibri",
-                size: 26,
-                bold: true
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            alignment: AlignmentType.CENTER,
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Вид робіт: Капітальний ремонт",
-                font: "Calibri",
-                size: 24,
-                italics: true
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 200 }
-          }),
-          
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "Базова вартість капремонту для II категорії = 15,000 тис. грн/км",
-                font: "Calibri",
-                size: 24
-              })
-            ],
-            alignment: AlignmentType.CENTER,
             spacing: { after: 150 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "Вартість = 15,000 × 456 = 6,840,000 тис. грн",
-                font: "Calibri",
-                size: 30,
-                bold: true,
-                color: "16A34A"
+                text: "Базова вартість капремонту для II категорії = 15 000 тис. грн/км",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 150, after: 150 },
-            shading: { fill: "DCFCE7" },
-            border: {
-              top: { style: BorderStyle.DOUBLE, size: 15, color: "16A34A" },
-              bottom: { style: BorderStyle.DOUBLE, size: 15, color: "16A34A" },
-              left: { style: BorderStyle.DOUBLE, size: 15, color: "16A34A" },
-              right: { style: BorderStyle.DOUBLE, size: 15, color: "16A34A" }
-            }
+            spacing: { after: 150 }
+          }),
+          
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Вартість = 15 000 × 456 = 6 840 000 тис. грн",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
+              })
+            ],
+            spacing: { before: 150, after: 150 }
           }),
           
           new Paragraph({ text: "", spacing: { after: 250 } }),
           
-          // Таблиця нормативів
           new Paragraph({
             children: [
               new TextRun({
-                text: "📋 БАЗОВІ НОРМАТИВИ ВАРТОСТІ РОБІТ",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "FFFFFF"
+                text: "Базові нормативи вартості робіт (тис. грн/км):",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 200 },
-            shading: { fill: "1F4E78" }
-          }),
-          
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "(тис. грн/км)",
-                font: "Calibri",
-                size: 22,
-                italics: true,
-                color: "666666"
-              })
-            ],
-            alignment: AlignmentType.CENTER,
             spacing: { after: 150 }
           }),
           
           new Table({
             width: { size: 100, type: WidthType.PERCENTAGE },
             borders: {
-              top: { style: BorderStyle.SINGLE, size: 8, color: "2E75B6" },
-              bottom: { style: BorderStyle.SINGLE, size: 8, color: "2E75B6" },
-              left: { style: BorderStyle.SINGLE, size: 8, color: "2E75B6" },
-              right: { style: BorderStyle.SINGLE, size: 8, color: "2E75B6" },
-              insideHorizontal: { style: BorderStyle.SINGLE, size: 4, color: "CCCCCC" },
-              insideVertical: { style: BorderStyle.SINGLE, size: 4, color: "CCCCCC" }
+              top: { style: BorderStyle.SINGLE, size: 8, color: "000000" },
+              bottom: { style: BorderStyle.SINGLE, size: 8, color: "000000" },
+              left: { style: BorderStyle.SINGLE, size: 8, color: "000000" },
+              right: { style: BorderStyle.SINGLE, size: 8, color: "000000" },
+              insideHorizontal: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
+              insideVertical: { style: BorderStyle.SINGLE, size: 4, color: "000000" }
             },
             rows: [
               new TableRow({
                 children: [
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "Вид робіт", bold: true, font: "Calibri", size: 24, color: "FFFFFF" })],
+                      children: [new TextRun({ text: "Вид робіт", bold: true, font: "Times New Roman", size: 28 })],
                       alignment: AlignmentType.CENTER
-                    })],
-                    shading: { fill: "2E75B6" }
+                    })]
                   }),
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "I", bold: true, font: "Calibri", size: 24, color: "FFFFFF" })],
+                      children: [new TextRun({ text: "I", bold: true, font: "Times New Roman", size: 28 })],
                       alignment: AlignmentType.CENTER
-                    })],
-                    shading: { fill: "2E75B6" }
+                    })]
                   }),
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "II", bold: true, font: "Calibri", size: 24, color: "FFFFFF" })],
+                      children: [new TextRun({ text: "II", bold: true, font: "Times New Roman", size: 28 })],
                       alignment: AlignmentType.CENTER
-                    })],
-                    shading: { fill: "2E75B6" }
+                    })]
                   }),
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "III", bold: true, font: "Calibri", size: 24, color: "FFFFFF" })],
+                      children: [new TextRun({ text: "III", bold: true, font: "Times New Roman", size: 28 })],
                       alignment: AlignmentType.CENTER
-                    })],
-                    shading: { fill: "2E75B6" }
+                    })]
                   }),
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "IV", bold: true, font: "Calibri", size: 24, color: "FFFFFF" })],
+                      children: [new TextRun({ text: "IV", bold: true, font: "Times New Roman", size: 28 })],
                       alignment: AlignmentType.CENTER
-                    })],
-                    shading: { fill: "2E75B6" }
+                    })]
                   }),
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "V", bold: true, font: "Calibri", size: 24, color: "FFFFFF" })],
+                      children: [new TextRun({ text: "V", bold: true, font: "Times New Roman", size: 28 })],
                       alignment: AlignmentType.CENTER
-                    })],
-                    shading: { fill: "2E75B6" }
+                    })]
                   })
                 ]
               }),
@@ -1694,45 +1443,42 @@ export async function generateUserManual() {
                 children: [
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "Реконструкція", bold: true, font: "Calibri", size: 22 })],
-                    })],
-                    shading: { fill: "FEE2E2" }
+                      children: [new TextRun({ text: "Реконструкція", font: "Times New Roman", size: 28 })]
+                    })]
                   }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "60,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "50,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "35,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "28,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "22,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] })
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "60 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "50 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "35 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "28 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "22 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] })
                 ]
               }),
               new TableRow({
                 children: [
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "Капітальний ремонт", bold: true, font: "Calibri", size: 22 })],
-                    })],
-                    shading: { fill: "FEF3C7" }
+                      children: [new TextRun({ text: "Капітальний ремонт", font: "Times New Roman", size: 28 })]
+                    })]
                   }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "18,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "15,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "12,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "9,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "7,000", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] })
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "18 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "15 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "12 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "9 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "7 000", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] })
                 ]
               }),
               new TableRow({
                 children: [
                   new TableCell({
                     children: [new Paragraph({ 
-                      children: [new TextRun({ text: "Поточний ремонт", bold: true, font: "Calibri", size: 22 })],
-                    })],
-                    shading: { fill: "DBEAFE" }
+                      children: [new TextRun({ text: "Поточний ремонт", font: "Times New Roman", size: 28 })]
+                    })]
                   }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "3,500", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "2,500", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "1,800", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "1,200", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] }),
-                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "900", font: "Calibri", size: 22, bold: true })], alignment: AlignmentType.CENTER })] })
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "3 500", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "2 500", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "1 800", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "1 200", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "900", font: "Times New Roman", size: 28 })], alignment: AlignmentType.CENTER })] })
                 ]
               })
             ]
@@ -1740,32 +1486,41 @@ export async function generateUserManual() {
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 6: ІСТОРІЯ РОЗРАХУНКІВ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "6. ІСТОРІЯ РОЗРАХУНКІВ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "6. ІСТОРІЯ РОЗРАХУНКІВ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
-            text: "6.1. Перегляд збережених розрахунків",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "6.1. Перегляд збережених розрахунків",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Усі розрахунки автоматично зберігаються. Для перегляду:",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
@@ -1775,103 +1530,95 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "1️⃣ Відкрийте розділ \"Історія розрахунків\"",
-                font: "Calibri",
-                size: 24
+                text: "1. Відкрийте розділ \"Історія розрахунків\".",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "2️⃣ У списку відображаються всі збережені сесії з датою та статусом",
-                font: "Calibri",
-                size: 24
+                text: "2. У списку відображаються всі збережені сесії з датою та статусом.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "3️⃣ Натисніть \"Перегляд\" для детального перегляду",
-                font: "Calibri",
-                size: 24
+                text: "3. Натисніть \"Перегляд\" для детального перегляду.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "6.2. Фільтрація за датами",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "6.2. Фільтрація за датами",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "📅 За роками",
-                font: "Calibri",
-                size: 24,
-                bold: true
-              }),
-              new TextRun({
-                text: " - перегляд всіх розрахунків за обраний рік",
-                font: "Calibri",
-                size: 24
+                text: "- За роками - перегляд всіх розрахунків за обраний рік;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "📅 За місяцями",
-                font: "Calibri",
-                size: 24,
-                bold: true
-              }),
-              new TextRun({
-                text: " - фільтрація по місяцях вибраного року",
-                font: "Calibri",
-                size: 24
+                text: "- За місяцями - фільтрація по місяцях вибраного року;",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "📅 За днями",
-                font: "Calibri",
-                size: 24,
-                bold: true
-              }),
-              new TextRun({
-                text: " - точний пошук за конкретну дату",
-                font: "Calibri",
-                size: 24
+                text: "- За днями - точний пошук за конкретну дату.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "6.3. Детальний перегляд сесії",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "6.3. Детальний перегляд сесії",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "При відкритті сесії відображається:",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
@@ -1880,112 +1627,126 @@ export async function generateUserManual() {
           
           new Paragraph({
             children: [
-              new TextRun({ text: "✓ Результати бюджетного фінансування (Q₁, Q₂, загальний бюджет)", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Результати бюджетного фінансування (Q1, Q2, загальний бюджет);", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "✓ Детальні таблиці з показниками", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Детальні таблиці з показниками;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "✓ Нормативи експлуатаційного утримання", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Нормативи експлуатаційного утримання;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "✓ Регіональні результати по всіх областях України", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Регіональні результати по всіх областях України;", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
-              new TextRun({ text: "✓ Результати планування ремонтів з вартістю", font: "Calibri", size: 24 })
+              new TextRun({ text: "- Результати планування ремонтів з вартістю.", font: "Times New Roman", size: 28 })
             ],
             spacing: { after: 250 }
           }),
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 7: ЕКСПОРТ ДАНИХ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "7. ЕКСПОРТ ДАНИХ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "7. ЕКСПОРТ ДАНИХ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
-            text: "7.1. Збереження результатів",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "7.1. Збереження результатів",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Програма дозволяє експортувати результати для подальшого використання:",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 200 }
+            spacing: { after: 150 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "1️⃣ Натисніть кнопку \"Експорт\" у відповідному розділі",
-                font: "Calibri",
-                size: 24
+                text: "1. Натисніть кнопку \"Експорт\" у відповідному розділі.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "2️⃣ Файл автоматично завантажиться на ваш комп'ютер",
-                font: "Calibri",
-                size: 24
+                text: "2. Файл автоматично завантажиться на ваш комп'ютер.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "3️⃣ Відкрийте файл у відповідній програмі для перегляду",
-                font: "Calibri",
-                size: 24
+                text: "3. Відкрийте файл у відповідній програмі для перегляду.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "7.2. Друк результатів",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "7.2. Друк результатів",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
                 text: "Для друку результатів:",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               })
             ],
@@ -1995,29 +1756,29 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "1️⃣ Відкрийте потрібний розділ з результатами",
-                font: "Calibri",
-                size: 24
+                text: "1. Відкрийте потрібний розділ з результатами.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "2️⃣ Використайте функцію друку браузера (Ctrl+P)",
-                font: "Calibri",
-                size: 24
+                text: "2. Використайте функцію друку браузера (Ctrl+P).",
+                font: "Times New Roman",
+                size: 28
               })
             ],
-            spacing: { after: 120 }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
-                text: "3️⃣ Налаштуйте параметри та відправте на принтер або збережіть",
-                font: "Calibri",
-                size: 24
+                text: "3. Налаштуйте параметри та відправте на принтер або збережіть.",
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
@@ -2025,51 +1786,58 @@ export async function generateUserManual() {
         ]
       },
       
-      // ═══════════════════════════════════════════════════════════
       // РОЗДІЛ 8: МОЖЛИВІ ПОМИЛКИ
-      // ═══════════════════════════════════════════════════════════
       {
         properties: {},
         children: [
           new Paragraph({
-            text: "8. МОЖЛИВІ ПОМИЛКИ ТА ЇХ ВИРІШЕННЯ",
-            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "8. МОЖЛИВІ ПОМИЛКИ ТА ЇХ ВИРІШЕННЯ",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 400, after: 350 }
-          }),
-          
-          new Paragraph({
-            text: "8.1. Помилки введення",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            spacing: { before: 400, after: 300 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "❌ \"Заповніть всі обов'язкові поля\"",
-                font: "Calibri",
-                size: 26,
+                text: "8.1. Помилки введення",
                 bold: true,
-                color: "DC2626"
+                size: 28,
+                font: "Times New Roman"
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "FEE2E2" }
+            spacing: { before: 250, after: 200 }
+          }),
+          
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "\"Заповніть всі обов'язкові поля\"",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
+              })
+            ],
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Рішення: ",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               }),
               new TextRun({
                 text: "Перевірте чи заповнені всі обов'язкові поля (позначені червоним).",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
@@ -2078,65 +1846,66 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "❌ \"Некоректне значення\"",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "DC2626"
+                text: "\"Некоректне значення\"",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "FEE2E2" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Рішення: ",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               }),
               new TextRun({
                 text: "Використовуйте тільки числа та десяткову крапку (не кому).",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 250 }
           }),
           
           new Paragraph({
-            text: "8.2. Проблеми з браузером",
-            heading: HeadingLevel.HEADING_2,
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 250, after: 250 }
+            children: [
+              new TextRun({
+                text: "8.2. Проблеми з браузером",
+                bold: true,
+                size: 28,
+                font: "Times New Roman"
+              })
+            ],
+            spacing: { before: 250, after: 200 }
           }),
           
           new Paragraph({
             children: [
               new TextRun({
-                text: "⚠ Повільна робота програми",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "CA8A04"
+                text: "Повільна робота програми",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "FEF3C7" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Рішення: ",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               }),
               new TextRun({
                 text: "Закрийте інші вкладки, очистіть кеш (Ctrl+Shift+Delete), перезавантажте сторінку (F5).",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 200 }
@@ -2145,36 +1914,40 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "⚠ Дані не зберігаються",
-                font: "Calibri",
-                size: 26,
-                bold: true,
-                color: "CA8A04"
+                text: "Дані не зберігаються",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
               })
             ],
-            spacing: { after: 120 },
-            shading: { fill: "FEF3C7" }
+            spacing: { after: 100 }
           }),
           new Paragraph({
             children: [
               new TextRun({
                 text: "Рішення: ",
-                font: "Calibri",
-                size: 24,
+                font: "Times New Roman",
+                size: 28,
                 bold: true
               }),
               new TextRun({
                 text: "Не використовуйте режим інкогніто. Регулярно експортуйте важливі розрахунки.",
-                font: "Calibri",
-                size: 24
+                font: "Times New Roman",
+                size: 28
               })
             ],
             spacing: { after: 400 }
           }),
           
-          // Завершення
           new Paragraph({
-            text: "═══════════════════════════════════════",
+            children: [
+              new TextRun({
+                text: "КІНЕЦЬ ІНСТРУКЦІЇ",
+                font: "Times New Roman",
+                size: 28,
+                bold: true
+              })
+            ],
             alignment: AlignmentType.CENTER,
             spacing: { before: 500, after: 250 }
           }),
@@ -2182,25 +1955,9 @@ export async function generateUserManual() {
           new Paragraph({
             children: [
               new TextRun({
-                text: "КІНЕЦЬ ІНСТРУКЦІЇ",
-                font: "Calibri",
-                size: 28,
-                bold: true,
-                color: "1F4E78"
-              })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 250 }
-          }),
-          
-          new Paragraph({
-            children: [
-              new TextRun({
                 text: `© ${new Date().getFullYear()} | Документ згенеровано: ${new Date().toLocaleString('uk-UA')}`,
-                font: "Calibri",
-                size: 22,
-                color: "666666",
-                italics: true
+                font: "Times New Roman",
+                size: 28
               })
             ],
             alignment: AlignmentType.CENTER,

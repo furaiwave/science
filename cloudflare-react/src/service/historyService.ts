@@ -27,7 +27,9 @@ export interface BlockTwoHistoryData {
   sessionId: string;
   timestamp: Date;
   stateRoadBaseRate: number;
+  stateRoadBaseYear?: number; // ✅ ДОДАНО
   localRoadBaseRate: number;
+  localRoadBaseYear?: number; // ✅ ДОДАНО
   stateInflationIndexes: number[];
   localInflationIndexes: number[];
   selectedRegion: string;
@@ -319,7 +321,9 @@ class HistoryService {
     fundingResults: any,
     regionalResults?: any[], // ✅ ДОДАНО
     regionalData?: any[], // ✅ ДОДАНО
-    roadType?: 'state' | 'local' // ✅ ДОДАНО
+    roadType?: 'state' | 'local', // ✅ ДОДАНО
+    stateRoadBaseYear?: number, // ✅ ДОДАНО
+    localRoadBaseYear?: number // ✅ ДОДАНО
   ): Promise<boolean> {
     try {
       const user = await this.getUserSession();
@@ -336,7 +340,9 @@ class HistoryService {
         sessionId,
         timestamp: new Date(),
         stateRoadBaseRate,
+        stateRoadBaseYear, // ✅ ДОДАНО
         localRoadBaseRate,
+        localRoadBaseYear, // ✅ ДОДАНО
         stateInflationIndexes: [...stateInflationIndexes],
         localInflationIndexes: [...localInflationIndexes],
         selectedRegion,

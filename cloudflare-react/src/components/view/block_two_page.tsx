@@ -16,12 +16,10 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 // Импорт функций расчета
 import {
   getRegionCoefficients,
-  generateSampleRegionData,
 } from '../../modules/block_two';
 
 import type { 
-  RegionCoefficients,
-  RegionRoads
+  RegionCoefficients
 } from '../../modules/block_two';
 
 const Block2MaintenanceCalculator: React.FC = () => {
@@ -54,7 +52,6 @@ const Block2MaintenanceCalculator: React.FC = () => {
 
   // State для расчета финансирования (Розрахунок фінансування)
   const [regionCoefficients] = useState<RegionCoefficients[]>(getRegionCoefficients());
-  const [_regionData] = useState<RegionRoads>(generateSampleRegionData("Оберіть регіон"));
   const [saveStatus, setSaveStatus] = useState<string>("");
   
   // Redux hooks
@@ -149,17 +146,19 @@ const Block2MaintenanceCalculator: React.FC = () => {
                        totalFunding: (stateRoadRate.category1 + localRoadRate.category1) * 1000
                      };
 
-                     await historyDispatch(saveBlockTwoData({
-                       sessionId: sessionId,
-                       stateRoadBaseRate,
-                       localRoadBaseRate,
-                       stateInflationIndexes,
-                       localInflationIndexes,
-                       selectedRegion: "Оберіть регіон",
-                       stateRoadRates: stateRoadRate,
-                       localRoadRates: localRoadRate,
-                       fundingResults
-                     }));
+                    await historyDispatch(saveBlockTwoData({
+                      sessionId: sessionId,
+                      stateRoadBaseRate,
+                      stateRoadBaseYear: blockTwoState.stateRoadBaseYear,
+                      localRoadBaseRate,
+                      localRoadBaseYear: blockTwoState.localRoadBaseYear,
+                      stateInflationIndexes,
+                      localInflationIndexes,
+                      selectedRegion: "Оберіть регіон",
+                      stateRoadRates: stateRoadRate,
+                      localRoadRates: localRoadRate,
+                      fundingResults
+                    }));
 
                      setSaveStatus("✅ Збережено в історію!");
                      console.log('Результати експлуатаційного утримання збережено в Redux історію');

@@ -10,6 +10,11 @@ export const selectStateRoadBaseRate = createSelector(
   (blockTwo) => blockTwo.stateRoadBaseRate
 );
 
+export const selectStateRoadBaseYear = createSelector(
+  [selectBlockTwo],
+  (blockTwo) => blockTwo.stateRoadBaseYear
+);
+
 export const selectStateInflationIndexes = createSelector(
   [selectBlockTwo],
   (blockTwo) => blockTwo.stateInflationIndexes
@@ -24,6 +29,11 @@ export const selectStateRoadRates = createSelector(
 export const selectLocalRoadBaseRate = createSelector(
   [selectBlockTwo],
   (blockTwo) => blockTwo.localRoadBaseRate
+);
+
+export const selectLocalRoadBaseYear = createSelector(
+  [selectBlockTwo],
+  (blockTwo) => blockTwo.localRoadBaseYear
 );
 
 export const selectLocalInflationIndexes = createSelector(
