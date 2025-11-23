@@ -5,6 +5,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useHistory, useCurrentSession } from '../../redux/hooks';
 import { saveBlockTwoData } from '../../redux/slices/historySlice';
 import { useAppSelector } from '../../redux/hooks';
+import type { CalculationSession } from '../../service/historyService';
 
 // Импорт компонентов
 import Block2StateRoads from '../../page/block_two/Block2StateRoads';
@@ -130,12 +131,19 @@ const Block2MaintenanceCalculator: React.FC = () => {
                    // Создаем сессию, если её нет
                    let sessionId = currentSession?.id;
                    if (!sessionId) {
-                     await createSession(
+                     const result = await createSession(
                        `Експлуатаційне утримання доріг - ${new Date().toLocaleString('uk-UA')}`,
                        'Сесія розрахунків аналізу дорожніх секцій'
                      );
-                     // После создания сессии, получаем её ID из currentSession
-                     sessionId = currentSession?.id;
+                     
+                     // Получаем sessionId из результата action, а не из currentSession
+                     if (result.type.endsWith('/fulfilled') && result.payload) {
+                       const session = result.payload as CalculationSession;
+                       sessionId = session.id;
+                       console.log('✅ Сесія створена з ID:', sessionId);
+                     } else {
+                       throw new Error('Failed to create session');
+                     }
                    }
 
                    if (sessionId) {

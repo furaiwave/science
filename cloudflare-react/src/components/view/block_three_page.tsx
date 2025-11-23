@@ -9,6 +9,7 @@ import { RoadRankingTable } from '@/page/block_three/page_seven';
 import { useHistory, useCurrentSession } from '../../redux/hooks';
 import { saveBlockThreeData } from '../../redux/slices/historySlice';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import type { CalculationSession } from '../../service/historyService';
 import { 
   setCurrentPage as setCurrentPageAction
 } from '../../redux/slices/blockThreeSlice';
@@ -139,12 +140,19 @@ export const Block3MultiPageApp: React.FC = () => {
       // Створюємо сесію, якщо її немає
       let sessionId = currentSession?.id;
       if (!sessionId) {
-        await createSession(
+        const result = await createSession(
           `Планування ремонтів - ${new Date().toLocaleString('uk-UA')}`,
           'Сесія розрахунків планування ремонтних робіт'
         );
-        // После создания сессии, получаем её ID из currentSession
-        sessionId = currentSession?.id;
+        
+        // Получаем sessionId из результата action, а не из currentSession
+        if (result.type.endsWith('/fulfilled') && result.payload) {
+          const session = result.payload as CalculationSession;
+          sessionId = session.id;
+          console.log('✅ Сесія створена з ID:', sessionId);
+        } else {
+          throw new Error('Failed to create session');
+        }
       }
 
       if (!sessionId) {

@@ -9,6 +9,7 @@ import { useAppSelector, useAppDispatch } from '@/redux/hooks';
 import { selectCalculatedRoads, selectHasCalculatedData } from '@/store/roadDataSlice';
 import { useHistory, useCurrentSession } from '@/redux/hooks';
 import { saveBlockThreeData } from '@/redux/slices/historySlice';
+import type { CalculationSession } from '@/service/historyService';
 import { 
   resetBlockThree,
   setCurrentPage,
@@ -271,11 +272,19 @@ export const RoadRankingTable: React.FC = () => {
       // Створюємо сесію, якщо її немає
       let sessionId = currentSession?.id;
       if (!sessionId) {
-        await createSession(
+        const result = await createSession(
           `Планування ремонтів - ${new Date().toLocaleString('uk-UA')}`,
           'Сесія розрахунків планування ремонтних робіт'
         );
-        sessionId = currentSession?.id;
+        
+        // Получаем sessionId из результата action, а не из currentSession
+        if (result.type.endsWith('/fulfilled') && result.payload) {
+          const session = result.payload as CalculationSession;
+          sessionId = session.id;
+          console.log('✅ Сесія створена з ID:', sessionId);
+        } else {
+          throw new Error('Failed to create session');
+        }
       }
 
       if (!sessionId) {

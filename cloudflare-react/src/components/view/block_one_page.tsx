@@ -10,6 +10,7 @@ import { calculationResultsService } from '../../service/resultLocalStorage';
 import { useHistory, useCurrentSession } from '../../redux/hooks';
 import { saveBlockOneData } from '../../redux/slices/historySlice';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import type { CalculationSession } from '../../service/historyService';
 import {
   setStateRoadBudget,
   setLocalRoadBudget,
@@ -632,12 +633,19 @@ const RoadFundingApp: React.FC = () => {
     let sessionId = currentSession?.id;
     if (!sessionId) {
       try {
-        await createSession(
+        const result = await createSession(
           `Розрахунок бюджетного фінансування - ${new Date().toLocaleString('uk-UA')}`,
           'Сесія розрахунків визначення обсягу бюджетного фінансування'
         );
-        // После создания сессии, получаем её ID из currentSession
-        sessionId = currentSession?.id;
+        
+        // Получаем sessionId из результата action, а не из currentSession
+        if (result.type.endsWith('/fulfilled') && result.payload) {
+          const session = result.payload as CalculationSession;
+          sessionId = session.id;
+          console.log('✅ Сесія створена з ID:', sessionId);
+        } else {
+          throw new Error('Failed to create session');
+        }
       } catch (error) {
         console.error('Помилка створення сесії:', error);
         setSaveError("Помилка створення сесії. Спробуйте ще раз.");
