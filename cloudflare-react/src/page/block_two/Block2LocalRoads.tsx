@@ -129,9 +129,12 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
   const localRoadRate = useSelector(selectLocalRoadRates);
   const cumulativeInflationMemoized = useSelector(selectLocalCumulativeInflation);
 
+  // Поточний рік для значень за замовчуванням
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
+  
   const [isYearSelectorOpen, setIsYearSelectorOpen] = React.useState(false);
   const [selectedStartYear, setSelectedStartYear] = React.useState<number>(2020);
-  const [selectedEndYear, setSelectedEndYear] = React.useState<number>(new Date().getFullYear() - 1);
+  const [selectedEndYear, setSelectedEndYear] = React.useState<number>(currentYear - 1);
 
   // ✅ ОПТИМІЗАЦІЯ: useCallback для запобігання ре-рендерам
   const addLocalInflationIndexHandler = useCallback(() => {
@@ -159,8 +162,18 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
     });
   }, [dispatch]);
 
-  const handleBaseYearChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setLocalRoadBaseYear(parseInt(e.target.value)));
+  const handleBaseYearChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '') {
+      // Дозволяємо очищення поля
+      dispatch(setLocalRoadBaseYear(new Date().getFullYear()));
+      return;
+    }
+    const year = parseInt(value);
+    if (!isNaN(year)) {
+      // Дозволяємо будь-яке введення чисел, браузер сам контролює min/max
+      dispatch(setLocalRoadBaseYear(year));
+    }
   }, [dispatch]);
 
   const applyYearRange = useCallback(() => {
@@ -182,16 +195,6 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
       description: `Додано ${yearsToAdd} років (${selectedStartYear}-${selectedEndYear}). Введіть індекси інфляції вручну.`,
     });
   }, [selectedStartYear, selectedEndYear, dispatch]);
-
-  // ✅ ОПТИМІЗАЦІЯ: useMemo - генерувати список років тільки один раз
-  const yearOptions = useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let year = 2000; year <= currentYear; year++) {
-      years.push(year);
-    }
-    return years;
-  }, []); // Порожній масив - обчислюється тільки один раз при монтуванні
 
   // ✅ ОПТИМІЗАЦІЯ: Використовуємо вже мемоізований результат із селектора
   const cumulativeInflation = cumulativeInflationMemoized;
@@ -273,16 +276,19 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
                 <Label htmlFor="localRoadBaseYear">
                   Рік затвердження нормативу
                 </Label>
-                <select
+                <Input
                   id="localRoadBaseYear"
+                  type="number"
+                  min="2000"
+                  max="2100"
+                  step="1"
                   value={localRoadBaseYear}
                   onChange={handleBaseYearChange}
-                  className="mt-2 w-full p-2 border rounded"
-                >
-                  {yearOptions.map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
+                  placeholder="наприклад: 2023"
+                  className="mt-2"
+                  inputMode="numeric"
+                  autoComplete="off"
+                />
               </div>
             </div>
             
@@ -313,33 +319,59 @@ const Block2LocalRoads: React.FC<Block2LocalRoadsProps> = () => {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <Label htmlFor="startYear">Початковий рік</Label>
-                            <select
+                            <Input
                               id="startYear"
+                              type="number"
+                              min="2000"
+                              max="2100"
+                              step="1"
                               value={selectedStartYear}
-                              onChange={(e) => setSelectedStartYear(parseInt(e.target.value))}
-                              className="w-full mt-1 p-2 border rounded"
-                            >
-                              {yearOptions.map((year: number) => (
-                                <option key={year} value={year}>{year}</option>
-                              ))}
-                            </select>
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === '') {
+                                  setSelectedStartYear(2020);
+                                  return;
+                                }
+                                const year = parseInt(value);
+                                if (!isNaN(year)) {
+                                  setSelectedStartYear(year);
+                                }
+                              }}
+                              placeholder="2020"
+                              className="mt-1"
+                              inputMode="numeric"
+                              autoComplete="off"
+                            />
                           </div>
                           <div>
                             <Label htmlFor="endYear">Кінцевий рік</Label>
-                            <select
+                            <Input
                               id="endYear"
+                              type="number"
+                              min="2000"
+                              max="2100"
+                              step="1"
                               value={selectedEndYear}
-                              onChange={(e) => setSelectedEndYear(parseInt(e.target.value))}
-                              className="w-full mt-1 p-2 border rounded"
-                            >
-                              {yearOptions.map((year: number) => (
-                                <option key={year} value={year}>{year}</option>
-                              ))}
-                            </select>
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === '') {
+                                  setSelectedEndYear(currentYear);
+                                  return;
+                                }
+                                const year = parseInt(value);
+                                if (!isNaN(year)) {
+                                  setSelectedEndYear(year);
+                                }
+                              }}
+                              placeholder={currentYear.toString()}
+                              className="mt-1"
+                              inputMode="numeric"
+                              autoComplete="off"
+                            />
                           </div>
                         </div>
                         <div className="p-3 bg-blue-50 rounded text-sm">
-                          <strong>Буде додано років:</strong> {selectedEndYear - selectedStartYear + 1}
+                          <strong>Буде додано років:</strong> {Math.max(0, selectedEndYear - selectedStartYear + 1)}
                           <br />
                           <strong>Діапазон:</strong> {selectedStartYear} - {selectedEndYear}
                         </div>

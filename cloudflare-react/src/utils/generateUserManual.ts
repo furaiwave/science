@@ -1971,4 +1971,3 @@ export async function generateUserManual() {
   const blob = await Packer.toBlob(doc);
   saveAs(blob, `Інструкція_користувача_${new Date().toISOString().split('T')[0]}.docx`);
 }
-
