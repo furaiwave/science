@@ -911,7 +911,7 @@ const HistoryComponent: React.FC = () => {
                           </TableHeader>
                           <TableBody>
                             <TableRow className="bg-white">
-                              <TableCell className="font-medium">Базовий норматив</TableCell>
+                              <TableCell className="font-medium">Базовий норматив (в цінах {selectedSession.blockTwoData.stateRoadBaseYear || 2023} року)</TableCell>
                               <TableCell className="text-right font-semibold">
                                 {selectedSession.blockTwoData.stateRoadBaseRate.toFixed(3)} тис. грн/км
                               </TableCell>
@@ -970,7 +970,7 @@ const HistoryComponent: React.FC = () => {
                           </TableHeader>
                           <TableBody>
                             <TableRow className="bg-white">
-                              <TableCell className="font-medium">Базовий норматив</TableCell>
+                              <TableCell className="font-medium">Базовий норматив (в цінах {selectedSession.blockTwoData.localRoadBaseYear || 2023} року)</TableCell>
                               <TableCell className="text-right font-semibold">
                                 {selectedSession.blockTwoData.localRoadBaseRate.toFixed(3)} тис. грн/км
                               </TableCell>

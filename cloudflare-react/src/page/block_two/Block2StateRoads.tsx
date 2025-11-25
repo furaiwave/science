@@ -259,36 +259,38 @@ const Block2StateRoads: React.FC<Block2StateRoadsProps> = () => {
         <div className="grid gap-6">
           <div className="grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
+              <div className="sm:col-span-2">
                 <Label htmlFor="stateRoadBaseRate">
-                  Встановлений норматив річних фінансових витрат на ЕУ 1 км дороги II кат. державного значення (тис. грн/км)
+                  Встановлений норматив річних фінансових витрат на ЕУ 1 км дороги II кат. державного значення в цінах <span className="bg-yellow-200 px-1 rounded font-semibold">{stateRoadBaseYear}</span> року (тис. грн/км)
                 </Label>
-                <Input
-                  id="stateRoadBaseRate"
-                  type="number"
-                  value={stateRoadBaseRate}
-                  onChange={handleBaseRateChange}
-                  onPaste={handleBaseRatePaste}
-                  className="mt-2"
-                />
-              </div>
-              <div>
-                <Label htmlFor="stateRoadBaseYear">
-                  Рік затвердження нормативу
-                </Label>
-                <Input
-                  id="stateRoadBaseYear"
-                  type="number"
-                  min="2000"
-                  max="2100"
-                  step="1"
-                  value={stateRoadBaseYear}
-                  onChange={handleBaseYearChange}
-                  placeholder="наприклад: 2023"
-                  className="mt-2"
-                  inputMode="numeric"
-                  autoComplete="off"
-                />
+                <div className="grid gap-4 sm:grid-cols-2 mt-2">
+                  <Input
+                    id="stateRoadBaseRate"
+                    type="number"
+                    value={stateRoadBaseRate}
+                    onChange={handleBaseRateChange}
+                    onPaste={handleBaseRatePaste}
+                    placeholder="наприклад: 604.761"
+                  />
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="stateRoadBaseYear" className="whitespace-nowrap text-sm">
+                      Рік нормативу:
+                    </Label>
+                    <Input
+                      id="stateRoadBaseYear"
+                      type="number"
+                      min="2000"
+                      max="2100"
+                      step="1"
+                      value={stateRoadBaseYear}
+                      onChange={handleBaseYearChange}
+                      placeholder="2023"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      className="w-24"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             

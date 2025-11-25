@@ -198,7 +198,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
             <Text style={styles.tableCellHeader}>Значення</Text>
           </View>
           <View style={[styles.tableRow, styles.tableRowEven]}>
-            <Text style={styles.tableCell}>Базовий норматив</Text>
+            <Text style={styles.tableCell}>Базовий норматив (в цінах {blockTwoState?.stateRoadBaseYear || 2023} року)</Text>
             <Text style={styles.tableCell}>{(blockTwoState?.stateRoadBaseRate || 0).toFixed(3)} тис. грн/км</Text>
           </View>
           <View style={[styles.tableRow, styles.tableRowOdd]}>
@@ -252,7 +252,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
             <Text style={styles.tableCellHeader}>Значення</Text>
           </View>
           <View style={[styles.tableRow, styles.tableRowEven]}>
-            <Text style={styles.tableCell}>Базовий норматив</Text>
+            <Text style={styles.tableCell}>Базовий норматив (в цінах {blockTwoState?.localRoadBaseYear || 2023} року)</Text>
             <Text style={styles.tableCell}>{(blockTwoState?.localRoadBaseRate || 0).toFixed(3)} тис. грн/км</Text>
           </View>
           <View style={[styles.tableRow, styles.tableRowOdd]}>
