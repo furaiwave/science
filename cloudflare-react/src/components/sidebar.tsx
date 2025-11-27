@@ -8,7 +8,7 @@ import { clearAllData } from "@/redux/slices/historySlice";
 import { clearAllAppData } from "@/redux/store";
 import { persistor } from "@/redux/store";
 import { logger } from "@/utils/logger";
-import { generateUserManual } from "@/utils/generateUserManual";
+import { downloadReadyManual } from "@/utils/downloadManual";
 
 // ✅ Shadcn/ui Sidebar Components
 import {
@@ -118,7 +118,7 @@ export const AppSidebar: React.FC = () => {
 
                         {/* Download User Manual Button */}
                         <Button
-                            onClick={() => generateUserManual()}
+                            onClick={() => downloadReadyManual()}
                             variant="outline"
                             className="w-full mb-2 md:mb-3 text-xs md:text-sm xl:text-base py-2 md:py-2.5 bg-blue-50 hover:bg-blue-100 border-blue-200"
                         >

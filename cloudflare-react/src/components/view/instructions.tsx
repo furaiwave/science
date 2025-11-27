@@ -13,6 +13,23 @@ import {
   Info
 } from 'lucide-react';
 
+// Импорт изображений
+import image1 from '@/image/image1.png';
+import image2 from '@/image/image2.png';
+import image3 from '@/image/image3.png';
+import image4 from '@/image/image4.png';
+import image5 from '@/image/image5.png';
+import image6 from '@/image/image6.png';
+import image7 from '@/image/image7.png';
+import image8 from '@/image/image8.png';
+import image9 from '@/image/image9.png';
+import image10 from '@/image/image10.png';
+import image11 from '@/image/image11.png';
+import image12 from '@/image/image12.png';
+import image13 from '@/image/image13.png';
+import image14 from '@/image/image14.png';
+import image15 from '@/image/image15.png';
+
 const UserManual: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -173,6 +190,11 @@ const UserManual: React.FC = () => {
                   <li>Формула: Q₁ = Q1 + Qпп + Qміжн + QІАС + Qн + Qлік + Qвп + Qупр + QДПП</li>
                 </ul>
               </div>
+
+              <div className="mt-4">
+                <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Приклад заповнення таблиці для державних доріг:</h4>
+                <img src={image1} alt="Таблиця державних доріг Q1" className="w-full border rounded-lg shadow-sm" />
+              </div>
             </CardContent>
           </Card>
 
@@ -208,6 +230,11 @@ const UserManual: React.FC = () => {
                   <li>Результат відобразиться у синій панелі: "Q₂ (Місцеві дороги): XXX тис. грн"</li>
                   <li>Формула: Q₂ = Q2 + Qкред + Qн2 + QДПП2 + Qком</li>
                 </ul>
+              </div>
+
+              <div className="mt-4">
+                <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Приклад заповнення таблиці для місцевих доріг:</h4>
+                <img src={image2} alt="Таблиця місцевих доріг Q2" className="w-full border rounded-lg shadow-sm" />
               </div>
             </CardContent>
           </Card>
@@ -340,6 +367,11 @@ const UserManual: React.FC = () => {
                     </ul>
                   </AlertDescription>
                 </Alert>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Приклад розрахунку нормативів для державних доріг:</h4>
+                  <img src={image3} alt="Розрахунок нормативів для державних доріг" className="w-full border rounded-lg shadow-sm" />
+                </div>
               </div>
 
             </CardContent>
@@ -384,6 +416,11 @@ const UserManual: React.FC = () => {
                     </ul>
                   </AlertDescription>
                 </Alert>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Приклад розрахунку нормативів для місцевих доріг:</h4>
+                  <img src={image4} alt="Розрахунок нормативів для місцевих доріг" className="w-full border rounded-lg shadow-sm" />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -440,6 +477,11 @@ const UserManual: React.FC = () => {
                   <li>Дочекайтеся повідомлення: "✅ Успішно завантажено дані для XX областей"</li>
                   <li>Таблиця відобразиться з можливістю редагування</li>
                 </ul>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Приклад завантаженої таблиці даних по областях:</h4>
+                  <img src={image5} alt="Завантажені дані по областях України" className="w-full border rounded-lg shadow-sm" />
+                </div>
               </div>
 
               <div>
@@ -449,6 +491,11 @@ const UserManual: React.FC = () => {
                   <li>Опція "Всі області" - показує зведену таблицю по всій Україні</li>
                   <li>Вибір конкретної області - показує деталі тільки для неї</li>
                 </ul>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Фільтр по області та режим редагування:</h4>
+                  <img src={image6} alt="Вибір області та редагування таблиці" className="w-full border rounded-lg shadow-sm" />
+                </div>
               </div>
 
               <div>
@@ -485,6 +532,15 @@ const UserManual: React.FC = () => {
                       <li>• Підсумковий рядок "ВСЬОГО ПО УКРАЇНІ"</li>
                     </ul>
                   </div>
+                </div>
+
+                <div className="mt-4 space-y-3">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Результати розрахунку для державних доріг:</h4>
+                  <img src={image7} alt="Результати розрахунку - коефіцієнти та фінансування (державні дороги)" className="w-full border rounded-lg shadow-sm" />
+                  
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600 mt-4">📸 Результати розрахунку для місцевих доріг:</h4>
+                  <img src={image8} alt="Результати розрахунку - коефіцієнти (місцеві дороги)" className="w-full border rounded-lg shadow-sm" />
+                  <img src={image9} alt="Результати розрахунку - фінансування (місцеві дороги)" className="w-full border rounded-lg shadow-sm" />
                 </div>
               </div>
 
@@ -658,6 +714,11 @@ const UserManual: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              <div className="mt-4">
+                <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Приклад заповнення даних та результатів розрахунку (Сторінки 1-2):</h4>
+                <img src={image10} alt="Визначення показників транспортно-експлуатаційного стану доріг" className="w-full border rounded-lg shadow-sm" />
+              </div>
             </CardContent>
           </Card>
 
@@ -729,6 +790,11 @@ const UserManual: React.FC = () => {
                   <li>Розраховується загальна сума по всіх дорогах</li>
                 </ul>
               </div>
+
+              <div className="mt-4">
+                <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Показники вартості та розрахунок орієнтовної вартості робіт:</h4>
+                <img src={image11} alt="Усереднені орієнтовні показники вартості дорожніх робіт" className="w-full border rounded-lg shadow-sm" />
+              </div>
             </CardContent>
           </Card>
 
@@ -751,6 +817,11 @@ const UserManual: React.FC = () => {
                   <li>Оберіть дорогу з випадаючого списку (автоматично завантажуються дороги з Сторінок 1-2)</li>
                   <li>Дані про протяжність, категорію та інтенсивність автоматично підставляються</li>
                 </ul>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Вибір об'єкта для розрахунку ENPV:</h4>
+                  <img src={image12} alt="Вибір дороги для розрахунку економічної ефективності" className="w-full border rounded-lg shadow-sm" />
+                </div>
               </div>
               
               <div>
@@ -799,6 +870,11 @@ const UserManual: React.FC = () => {
                       <li>• Витрати ПІСЛЯ робіт (млн грн/рік)</li>
                     </ul>
                   </div>
+                </div>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Таблиця вихідних даних (31 параметр):</h4>
+                  <img src={image13} alt="Вихідні дані для розрахунку ENPV - 31 параметр" className="w-full border rounded-lg shadow-sm" />
                 </div>
               </div>
 
@@ -873,6 +949,11 @@ const UserManual: React.FC = () => {
                     <br/>де r = 10% (ставка дисконтування)
                   </AlertDescription>
                 </Alert>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Результати розрахунку ENPV з детальним розрахунком по роках:</h4>
+                  <img src={image14} alt="Результати розрахунку економічної ефективності ENPV" className="w-full border rounded-lg shadow-sm" />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -945,6 +1026,11 @@ const UserManual: React.FC = () => {
                   <li>Проекти з вищим рангом мають більший економічний ефект</li>
                   <li>Використовуйте рангування для складання плану робіт з урахуванням наявного бюджету</li>
                 </ul>
+
+                <div className="mt-4">
+                  <h4 className="font-semibold text-sm mb-2 text-gray-600">📸 Таблиця рангування об'єктів дорожніх робіт:</h4>
+                  <img src={image15} alt="Рангування об'єктів дорожніх робіт за економічною ефективністю" className="w-full border rounded-lg shadow-sm" />
+                </div>
               </div>
             </CardContent>
           </Card>
