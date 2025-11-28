@@ -76,7 +76,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
       ? blockTwoData.selectedRegions
       : (() => {
           // Зворотна сумісність: якщо є старий формат selectedRegion
-          const oldSelectedRegion = blockTwoState?.selectedRegion || blockTwoData?.selectedRegion;
+          const oldSelectedRegion = blockTwoData?.selectedRegion;
           if (oldSelectedRegion) {
             if (oldSelectedRegion === 'all' || oldSelectedRegion === 'Україна') {
               return []; // Пустий масив = всі області
@@ -99,11 +99,6 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
   
   // ✅ Вспомогательные функции для работы с selectedRegions
   const isAllRegions = selectedRegions.length === 0;
-  const getSelectedRegionText = (): string => {
-    if (isAllRegions) return 'Україна';
-    if (selectedRegions.length === 1) return selectedRegions[0];
-    return `${selectedRegions.length} обраних областей`;
-  };
   const getSelectedRegionDisplay = (): string => {
     if (isAllRegions) return 'Всі області';
     if (selectedRegions.length === 1) return selectedRegions[0];

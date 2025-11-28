@@ -32,7 +32,8 @@ export interface BlockTwoHistoryData {
   localRoadBaseYear?: number; // ✅ ДОДАНО
   stateInflationIndexes: number[];
   localInflationIndexes: number[];
-  selectedRegion: string;
+  selectedRegion: string; // Старый формат (для обратной совместимости)
+  selectedRegions?: string[]; // Новый формат (массив выбранных областей)
   stateRoadRates: {
     category1: number;
     category2: number;
