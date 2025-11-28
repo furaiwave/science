@@ -69,15 +69,22 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
       blockTwoState?.regionalResults || blockTwoData?.regionalResults || []
     );
 
-    const selectedRegions = Array.isArray(blockTwoState?.selectedRegions) 
+    // ✅ Конвертуємо selectedRegion (старий формат) в selectedRegions (новий формат) для зворотної сумісності
+    const selectedRegions: string[] = Array.isArray(blockTwoState?.selectedRegions) 
       ? blockTwoState.selectedRegions 
       : Array.isArray(blockTwoData?.selectedRegions)
       ? blockTwoData.selectedRegions
-      : blockTwoState?.selectedRegion || blockTwoData?.selectedRegion
-      ? (blockTwoState?.selectedRegion === 'all' || blockTwoData?.selectedRegion === 'all' || blockTwoState?.selectedRegion === 'Україна' || blockTwoData?.selectedRegion === 'Україна'
-          ? []
-          : [blockTwoState?.selectedRegion || blockTwoData?.selectedRegion || ''])
-      : [];
+      : (() => {
+          // Зворотна сумісність: якщо є старий формат selectedRegion
+          const oldSelectedRegion = blockTwoState?.selectedRegion || blockTwoData?.selectedRegion;
+          if (oldSelectedRegion) {
+            if (oldSelectedRegion === 'all' || oldSelectedRegion === 'Україна') {
+              return []; // Пустий масив = всі області
+            }
+            return [oldSelectedRegion]; // Одна область
+          }
+          return [];
+        })();
     const roadType = blockTwoState?.regionalResultsRoadType || blockTwoData?.roadType || null;
     const roadTypeLabel = roadType === 'state' ? 'ДЕРЖАВНИХ' : roadType === 'local' ? 'МІСЦЕВИХ' : '';
 
@@ -89,6 +96,19 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
     : allRegionalResults.filter((result) => selectedRegions.includes(result.regionName));
 
   const hasRegionalResults = Boolean(regionalResults.length > 0);
+  
+  // ✅ Вспомогательные функции для работы с selectedRegions
+  const isAllRegions = selectedRegions.length === 0;
+  const getSelectedRegionText = (): string => {
+    if (isAllRegions) return 'Україна';
+    if (selectedRegions.length === 1) return selectedRegions[0];
+    return `${selectedRegions.length} обраних областей`;
+  };
+  const getSelectedRegionDisplay = (): string => {
+    if (isAllRegions) return 'Всі області';
+    if (selectedRegions.length === 1) return selectedRegions[0];
+    return selectedRegions.join(', ');
+  };
 
   const styles = StyleSheet.create({
     page: { padding: 30, fontFamily: 'Roboto', backgroundColor: '#ffffff' },
@@ -193,7 +213,8 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
         <Page size="A4" style={styles.page}>
           <Text style={styles.title}>
             Звіт з експлуатаційного утримання доріг
-            {selectedRegion !== 'all' && selectedRegion !== 'Україна' && ` (${selectedRegion} область)`}
+            {!isAllRegions && selectedRegions.length === 1 && ` (${selectedRegions[0]} область)`}
+            {!isAllRegions && selectedRegions.length > 1 && ` (${selectedRegions.length} обраних областей)`}
           </Text>
         
         {/* Блок 2.1: Державні дороги */}
@@ -315,7 +336,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
               </View>
               <View style={[styles.tableRow, styles.tableRowEven]}>
                 <Text style={styles.tableCell}>Регіон</Text>
-                <Text style={styles.tableCell}>{blockTwoState?.selectedRegion || 'Не вибрано'}</Text>
+                <Text style={styles.tableCell}>{getSelectedRegionDisplay()}</Text>
               </View>
               <View style={[styles.tableRow, styles.tableRowOdd]}>
                 <Text style={styles.tableCell}>Фінансування держ. доріг</Text>
@@ -337,7 +358,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
         {hasRegionalResults && (
           <>
             <Text style={styles.sectionTitle}>
-              Детальний розрахунок обсягу коштів{selectedRegion === 'all' || selectedRegion === 'Україна' ? ' по областях' : ` для ${selectedRegion} області`}{roadTypeLabel ? ` (дороги ${roadTypeLabel.toLowerCase()} значення)` : ''}
+              Детальний розрахунок обсягу коштів{isAllRegions ? ' по областях' : selectedRegions.length === 1 ? ` для ${selectedRegions[0]} області` : ` для обраних областей`}{roadTypeLabel ? ` (дороги ${roadTypeLabel.toLowerCase()} значення)` : ''}
             </Text>
             <View style={styles.table}>
               {/* Заголовок таблиці */}
@@ -379,7 +400,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
               {/* Підсумковий рядок */}
               <View style={[styles.tableRow, { backgroundColor: '#e8f5e9', borderTopWidth: 2, borderTopColor: '#4caf50' }]}>
                 <Text style={{ width: '25%', padding: 5, fontSize: 9, fontWeight: 700, textAlign: 'left' }}>
-                  {selectedRegion === 'all' || selectedRegion === 'Україна' ? 'ВСЬОГО ПО УКРАЇНІ' : `ВСЬОГО ПО ${selectedRegion.toUpperCase()}`}
+                  {isAllRegions ? 'ВСЬОГО ПО УКРАЇНІ' : selectedRegions.length === 1 ? `ВСЬОГО ПО ${selectedRegions[0].toUpperCase()}` : `ВСЬОГО ПО ОБРАНИХ (${selectedRegions.length})`}
                 </Text>
                 <Text style={{ width: '10%', padding: 5, fontSize: 8, fontWeight: 700, textAlign: 'right' }}>
                   {Math.round((regionalResults || []).reduce((sum: number, r: any) => sum + r.fundingByCategory[1], 0)).toLocaleString('uk-UA')}
@@ -404,7 +425,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
             
             {/* Статистика по категоріях */}
             <Text style={{ ...styles.sectionTitle, fontSize: 14 }}>
-              Підсумок по категоріях доріг{selectedRegion === 'all' || selectedRegion === 'Україна' ? '' : ` (${selectedRegion} область)`}
+              Підсумок по категоріях доріг{isAllRegions ? '' : selectedRegions.length === 1 ? ` (${selectedRegions[0]} область)` : ` (${selectedRegions.length} обраних областей)`}
             </Text>
             <View style={styles.table}>
               <View style={[styles.tableRow, styles.tableHeader]}>
@@ -428,7 +449,7 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
         {hasRegionalResults && (
           <>
             <Text style={styles.sectionTitle}>
-              Середньозважені коригувальні коефіцієнти{selectedRegion === 'all' || selectedRegion === 'Україна' ? ' по областях' : ` для ${selectedRegion} області`}
+              Середньозважені коригувальні коефіцієнти{isAllRegions ? ' по областях' : selectedRegions.length === 1 ? ` для ${selectedRegions[0]} області` : ` для обраних областей`}
             </Text>
             <View style={styles.table}>
               {/* Заголовок таблиці */}
@@ -548,9 +569,11 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
     );
   }
 
-  const fileName = selectedRegion === 'all' || selectedRegion === 'Україна'
+  const fileName = isAllRegions
     ? `звіт_експлуатаційне_утримання_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`
-    : `звіт_експлуатаційне_утримання_${selectedRegion}_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`;
+    : selectedRegions.length === 1
+    ? `звіт_експлуатаційне_утримання_${selectedRegions[0]}_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`
+    : `звіт_експлуатаційне_утримання_обрано_${selectedRegions.length}_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`;
 
   return (
     <PDFDownloadLink

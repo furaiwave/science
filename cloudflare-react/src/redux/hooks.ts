@@ -89,7 +89,7 @@ export const useAppStatus = () => {
       sessionId: blockOne.sessionId,
     },
     blockTwo: {
-      selectedRegion: blockTwo.selectedRegion,
+      selectedRegions: blockTwo.selectedRegions,
       totalFunding: blockTwo.fundingResults?.totalFunding || 0,
       stateFunding: blockTwo.fundingResults?.stateFunding || 0,
       localFunding: blockTwo.fundingResults?.localFunding || 0,
