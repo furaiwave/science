@@ -289,28 +289,31 @@ const ENPVCalculationTool: React.FC = () => {
       const startYear = currentData.workStartYear;
       const years = currentData.calculatedYearCount;
       
-      // ✅ Загальні вигоди з модуля (в тисячах грн)
-      const totalBenefitsFromModule = 
+      // ✅ РІЧНІ ВИГОДИ з модуля (в тисячах грн) - це вже ГОДОВІ вигоди!
+      const annualBenefitsFromModule = 
         costBenefitAnalysis.vehicleFleetReduction +
         costBenefitAnalysis.transportCostSavings +
         costBenefitAnalysis.accidentReduction +
         costBenefitAnalysis.environmentalBenefits;
   
-      // Переводимо в мільйони грн
-      const totalBenefitsMillions = totalBenefitsFromModule / 1000;
+      // Переводимо в мільйони грн - це БАЗОВІ річні вигоди (рік 1)
+      const baseAnnualBenefitsMillions = annualBenefitsFromModule / 1000;
       
-      // Середні річні вигоди (розподіляємо рівномірно)
-      const averageAnnualBenefits = totalBenefitsMillions / years;
+      // ✅ ВИПРАВЛЕНО: Вигоди з модуля вже є річними, не ділимо на кількість років!
+      // Темп зростання трафіку: використовуємо поле "Періодичність інтенсивності дорожнього руху" (capitalRepairPeriod)
+      // Якщо значення в межах 0-50, то це відсоток річного зростання (наприклад, 2 = 2%)
+      // Інакше використовуємо стандартне значення 2% річного зростання
+      const trafficGrowthRate = (currentData.capitalRepairPeriod > 0 && currentData.capitalRepairPeriod <= 50)
+        ? currentData.capitalRepairPeriod / 100  // Конвертуємо відсоток в десяткове (2% = 0.02)
+        : 0.02; // За замовчуванням 2% річного зростання трафіку
   
-      console.log(`📊 Загальні вигоди: ${totalBenefitsMillions.toFixed(2)} млн грн`);
-      console.log(`📊 Середні річні вигоди: ${averageAnnualBenefits.toFixed(2)} млн грн/рік`);
+      console.log(`📊 Базові річні вигоди (рік 1): ${baseAnnualBenefitsMillions.toFixed(2)} млн грн/рік`);
+      console.log(`📊 Темп зростання трафіку: ${(trafficGrowthRate * 100).toFixed(1)}%`);
       console.log(`📊 Ставка дисконтування: ${(discountRate * 100).toFixed(1)}%`);
   
       let cumulativeENPV = 0;
       let totalDiscountedBenefits = 0;
       let totalDiscountedCosts = 0;
-  
-      const trafficGrowthRate = currentData.capitalRepairPeriod / 100;
   
       // ✅ Розрахунок по роках
       for (let i = 0; i <= years; i++) {
@@ -325,8 +328,11 @@ const ENPVCalculationTool: React.FC = () => {
           ? 0  // В рік будівництва немає утримання
           : currentData.maintenanceCostsAfter;
         
-        // ✅ РІЧНІ ВИГОДИ (починаючи з року 1)
-        const yearlyBenefits = (i === 0) ? 0 : averageAnnualBenefits;
+        // ✅ РІЧНІ ВИГОДИ (починаючи з року 1) з урахуванням зростання трафіку
+        // Вигоди зростають щороку відповідно до зростання трафіку
+        const yearlyBenefits = (i === 0) 
+          ? 0  // Рік 0: немає вигод
+          : baseAnnualBenefitsMillions * Math.pow(1 + trafficGrowthRate, i - 1);  // Рік i: вигоди з урахуванням зростання
         
         // ✅ ЕКОНОМІЧНИЙ ЕФЕКТ
         const economicEffect = (i === 0)
