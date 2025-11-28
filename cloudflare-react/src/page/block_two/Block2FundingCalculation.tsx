@@ -22,7 +22,7 @@ import { saveBlockTwoData } from '@/redux/slices/historySlice';
 import {
   setRegionalResults as setRegionalResultsAction,
   setRegionalResultsRoadType as setRegionalResultsRoadTypeAction,
-  setSelectedRegion as setSelectedRegionAction,
+  setSelectedRegions as setSelectedRegionsAction,
   setRegionalData as setRegionalDataAction,
   clearRegionalData as clearRegionalDataAction,
   setIsEditingTable as setIsEditingTableAction
@@ -108,7 +108,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
   const savedRegionalData = Array.isArray(blockTwoState.regionalData) ? blockTwoState.regionalData : [];
   const savedRegionalResults = Array.isArray(blockTwoState.regionalResults) ? blockTwoState.regionalResults : [];
   const savedRoadType = blockTwoState.regionalResultsRoadType || 'state';
-  const savedSelectedRegion = blockTwoState.selectedRegion || 'all';
+  const savedSelectedRegions = Array.isArray(blockTwoState.selectedRegions) ? blockTwoState.selectedRegions : [];
 
   // ✅ ВИПРАВЛЕНО: НЕ ініціалізуємо з Redux, а тільки через useEffect
   const [roadType, setRoadType] = useState<RoadType>('state');
@@ -123,7 +123,8 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
   const isEditing = blockTwoState.isEditingTable;
   const setIsEditing = (value: boolean) => dispatch(setIsEditingTableAction(value));
 
-  const [selectedRegion, setSelectedRegion] = useState<string>('all');
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]); // Пустой массив = все области
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
 
   // ✅ ВІДСЛІДКОВУВАННЯ РЕЖИМУ РЕДАГУВАННЯ
   useEffect(() => {
@@ -138,7 +139,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
       console.log('   savedRegionalData:', savedRegionalData.length, 'областей');
       console.log('   savedRegionalResults:', savedRegionalResults.length, 'результатів');
       console.log('   savedRoadType:', savedRoadType);
-      console.log('   savedSelectedRegion:', savedSelectedRegion);
+      console.log('   savedSelectedRegions:', savedSelectedRegions);
       console.log('   isEditing (з Redux):', blockTwoState.isEditingTable);
 
       // ✅ ПЕРЕВІРКА на некоректні дані (функції, undefined)
@@ -179,17 +180,71 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
         setRoadType(savedRoadType);
       }
 
-      if (selectedRegion !== savedSelectedRegion) {
-        console.log('   🔄 Оновлення selectedRegion з Redux:', savedSelectedRegion);
-        setSelectedRegion(savedSelectedRegion);
+      if (JSON.stringify(selectedRegions) !== JSON.stringify(savedSelectedRegions)) {
+        console.log('   🔄 Оновлення selectedRegions з Redux:', savedSelectedRegions);
+        setSelectedRegions(savedSelectedRegions);
       }
     } catch (error) {
       console.error('❌ Помилка при синхронізації з Redux:', error);
       dispatch(clearRegionalDataAction());
     }
-  }, [savedRegionalData, savedRegionalResults, savedRoadType, savedSelectedRegion]); // ✅ ЗАЛЕЖНОСТІ: реагуємо на зміни Redux!
+  }, [savedRegionalData, savedRegionalResults, savedRoadType, savedSelectedRegions]); // ✅ ЗАЛЕЖНОСТІ: реагуємо на зміни Redux!
 
   // ==================== ДОПОМІЖНІ ФУНКЦІЇ ====================
+  
+  // ✅ Функція для перевірки чи область відповідає фільтру
+  const isRegionInFilter = (regionName: string): boolean => {
+    return selectedRegions.length === 0 || selectedRegions.includes(regionName);
+  };
+  
+  // ✅ Функція для перевірки чи у області є реальні дані (не всі нулі)
+  const hasRegionData = (regionName: string): boolean => {
+    // Спочатку перевіряємо результати розрахунків
+    const regionResult = regionalResults.find(r => r.regionName === regionName);
+    if (regionResult && regionResult.totalFunding > 0) {
+      return true;
+    }
+    // Якщо немає результатів, перевіряємо вихідні дані
+    const regionData = regionalData.find(r => r.name === regionName);
+    if (regionData) {
+      // Перевіряємо чи є хоча б одна ненульова довжина доріг по категоріях
+      const hasLengthData = Object.values(regionData.lengthByCategory).some(length => length > 0);
+      // Або загальна довжина більше нуля
+      const hasTotalLength = regionData.totalLength > 0;
+      return hasLengthData || hasTotalLength;
+    }
+    return false;
+  };
+  
+  // ✅ Підрахунок областей з реальними даними (відфільтрованих по вибору користувача)
+  const getRegionsWithDataCount = (): number => {
+    // Отримуємо список областей для перевірки (всі або вибрані)
+    const regionsToCheck = selectedRegions.length === 0 
+      ? regionalData.map(r => r.name)
+      : selectedRegions;
+    
+    // Фільтруємо тільки ті, що мають реальні дані
+    return regionsToCheck.filter(regionName => {
+      // Перевіряємо чи область відповідає фільтру
+      if (!isRegionInFilter(regionName)) {
+        return false;
+      }
+      // Перевіряємо чи є дані
+      return hasRegionData(regionName);
+    }).length;
+  };
+  
+  // ✅ Закриваємо dropdown при кліку поза ним
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isFilterDropdownOpen && !target.closest('.filter-dropdown-container')) {
+        setIsFilterDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isFilterDropdownOpen]);
 
   // Розрахунок сукупного індексу інфляції
   // Якщо інфляція 106.1%, то коефіцієнт = 106.1/100 = 1.061
@@ -658,7 +713,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
         // ✅ ЗБЕРІГАЄМО В REDUX ДЛЯ PDF ЗВІТУ
         dispatch(setRegionalResultsAction(results));
         dispatch(setRegionalResultsRoadTypeAction(roadType));
-        dispatch(setSelectedRegionAction(selectedRegion)); // ✅ ЗБЕРІГАЄМО ВИБРАНИЙ РЕГІОН
+        dispatch(setSelectedRegionsAction(selectedRegions)); // ✅ ЗБЕРІГАЄМО ВИБРАНІ РЕГІОНИ
         console.log('✅ Дані збережено в Redux для PDF');
         
         setIsCalculatingRegional(false);
@@ -807,7 +862,11 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
         localRoadBaseRate: 5.25, // Базовий норматив для місцевих доріг
         stateInflationIndexes,
         localInflationIndexes: stateInflationIndexes,
-        selectedRegion: selectedRegion === 'all' ? 'Україна' : selectedRegion,
+        selectedRegion: selectedRegions.length === 0 
+          ? 'all' 
+          : selectedRegions.length === 1 
+          ? selectedRegions[0] 
+          : selectedRegions.join(', '),
         stateRoadRates: stateRates,
         localRoadRates: localRates,
         fundingResults: {
@@ -825,7 +884,11 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
         regionalResultsLength: regionalResults.length,
         regionalDataLength: regionalData.length,
         roadType: roadType,
-        selectedRegion: dataToSave.selectedRegion
+        selectedRegion: selectedRegions.length === 0 
+          ? 'all' 
+          : selectedRegions.length === 1 
+          ? selectedRegions[0] 
+          : selectedRegions.join(', ')
       });
       
       const result = await dispatch(saveBlockTwoData(dataToSave));
@@ -1074,41 +1137,144 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
               {/* ФІЛЬТР ПО ОБЛАСТЯХ */}
               <Card className="bg-gray-50 border-gray-200">
                 <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <div className="flex items-center gap-2 relative">
                       <label className="text-sm font-medium text-gray-700">
-                        Фільтр по області:
+                        Фільтр по областях:
                       </label>
-                      <select
-                        value={selectedRegion}
-                        onChange={(e) => {
-                          setSelectedRegion(e.target.value);
-                          dispatch(setSelectedRegionAction(e.target.value)); // ✅ ЗБЕРІГАЄМО В REDUX
-                        }}
-                        className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="all">Всі області ({regionalData.length})</option>
-                        {regionalData.map((region) => (
-                          <option key={region.name} value={region.name}>
-                            {region.name}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="relative filter-dropdown-container">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+                          className="px-3 py-2 text-sm min-w-[200px] justify-between"
+                        >
+                          <span>
+                            {selectedRegions.length === 0 
+                              ? `Всі області (${regionalData.length})`
+                              : selectedRegions.length === 1
+                              ? selectedRegions[0]
+                              : `Обрано: ${selectedRegions.length}`
+                            }
+                          </span>
+                          <svg 
+                            className={`w-4 h-4 transition-transform ${isFilterDropdownOpen ? 'rotate-180' : ''}`}
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </Button>
+                        {isFilterDropdownOpen && (
+                          <div className="absolute z-50 mt-1 w-[300px] bg-white border border-gray-300 rounded-md shadow-lg max-h-[400px] overflow-y-auto">
+                            <div className="p-2 border-b border-gray-200 sticky top-0 bg-white">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs font-semibold text-gray-700">Оберіть області:</span>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedRegions([]);
+                                    dispatch(setSelectedRegionsAction([]));
+                                  }}
+                                  className="h-6 px-2 text-xs"
+                                >
+                                  Очистити
+                                </Button>
+                              </div>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const allRegions = regionalData.map(r => r.name);
+                                  setSelectedRegions(allRegions);
+                                  dispatch(setSelectedRegionsAction(allRegions));
+                                }}
+                                className="w-full h-7 text-xs"
+                              >
+                                Обрати всі
+                              </Button>
+                            </div>
+                            <div className="p-2">
+                              {regionalData.map((region) => {
+                                const isSelected = selectedRegions.includes(region.name);
+                                return (
+                                  <label
+                                    key={region.name}
+                                    className="flex items-center gap-2 p-2 hover:bg-gray-50 cursor-pointer rounded"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={isSelected}
+                                      onChange={(e) => {
+                                        if (e.target.checked) {
+                                          const newSelection = [...selectedRegions, region.name];
+                                          setSelectedRegions(newSelection);
+                                          dispatch(setSelectedRegionsAction(newSelection));
+                                        } else {
+                                          const newSelection = selectedRegions.filter(r => r !== region.name);
+                                          setSelectedRegions(newSelection);
+                                          dispatch(setSelectedRegionsAction(newSelection));
+                                        }
+                                      }}
+                                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span className="text-sm text-gray-700">{region.name}</span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    {selectedRegion !== 'all' && (
-                      <Button
-                        onClick={() => {
-                          setSelectedRegion('all');
-                          dispatch(setSelectedRegionAction('all')); // ✅ ЗБЕРІГАЄМО В REDUX
-                        }}
-                        variant="outline"
-                        size="sm"
-                        className="text-blue-600 border-blue-300 hover:bg-blue-50"
-                      >
-                        Показати всі
-                      </Button>
+                    {selectedRegions.length > 0 && (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs text-gray-600">
+                          Обрано: {selectedRegions.length} з {regionalData.length}
+                        </span>
+                        <Button
+                          onClick={() => {
+                            setSelectedRegions([]);
+                            dispatch(setSelectedRegionsAction([]));
+                            setIsFilterDropdownOpen(false);
+                          }}
+                          variant="outline"
+                          size="sm"
+                          className="text-blue-600 border-blue-300 hover:bg-blue-50"
+                        >
+                          Показати всі
+                        </Button>
+                      </div>
                     )}
                   </div>
+                  {/* Показываем выбранные области как теги */}
+                  {selectedRegions.length > 0 && selectedRegions.length <= 5 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {selectedRegions.map((region) => (
+                        <span
+                          key={region}
+                          className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded"
+                        >
+                          {region}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newSelection = selectedRegions.filter(r => r !== region);
+                              setSelectedRegions(newSelection);
+                              dispatch(setSelectedRegionsAction(newSelection));
+                            }}
+                            className="hover:text-blue-900"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -1130,7 +1296,6 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                           ) : (
                             <p className="text-gray-600">Режим перегляду (клікніть "Редагувати дані" для зміни)</p>
                           )}
-                          <p className="text-gray-500">Redux state: isEditingTable = {blockTwoState.isEditingTable ? 'true' : 'false'}</p>
                         </div>
                       </div>
                     </div>
@@ -1232,7 +1397,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                       </thead>
                       <tbody>
                         {regionalData
-                          .filter(region => selectedRegion === 'all' || region.name === selectedRegion)
+                          .filter(region => isRegionInFilter(region.name))
                           .map((region, filteredIdx) => {
                             // Находим реальный индекс в исходном массиве
                             const realIdx = regionalData.findIndex(r => r.name === region.name);
@@ -1524,7 +1689,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                           </thead>
                           <tbody>
                             {regionalResults
-                              .filter(result => selectedRegion === 'all' || result.regionName === selectedRegion)
+                              .filter(result => isRegionInFilter(result.regionName))
                               .map((result, filteredIdx) => {
                                 // Находим реальный индекс в исходном массиве
                                 const realIdx = regionalResults.findIndex(r => r.regionName === result.regionName);
@@ -1739,7 +1904,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                             </thead>
                             <tbody>
                               {regionalData
-                                .filter(region => selectedRegion === 'all' || region.name === selectedRegion)
+                                .filter(region => isRegionInFilter(region.name))
                                 .map((region, filteredIdx) => {
                                 const totalFunding = regionalResults.reduce((sum, r) => sum + r.totalFunding, 0);
                                 const regionResult = regionalResults.find(r => r.regionName === region.name);
@@ -1780,25 +1945,30 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                               })}
                               <tr className="bg-gray-300 font-bold">
                                 <td className="border-2 border-gray-400 p-3 whitespace-nowrap min-w-[150px]">
-                                  {selectedRegion === 'all' ? 'ВСЬОГО ПО УКРАЇНІ' : `ВСЬОГО ПО ${selectedRegion.toUpperCase()}`}
+                                  {selectedRegions.length === 0 
+                                    ? 'ВСЬОГО ПО УКРАЇНІ' 
+                                    : selectedRegions.length === 1
+                                    ? `ВСЬОГО ПО ${selectedRegions[0].toUpperCase()}`
+                                    : `ВСЬОГО ПО ОБРАНИХ (${selectedRegions.length})`
+                                  }
                                 </td>
                                 {([1, 2, 3, 4, 5] as const).map(cat => (
                                   <td key={`total-length-${cat}`} className="border-2 border-gray-400 p-2 text-right whitespace-nowrap min-w-[70px]">
                                     {regionalData
-                                      .filter(region => selectedRegion === 'all' || region.name === selectedRegion)
+                                      .filter(region => isRegionInFilter(region.name))
                                       .reduce((sum, r) => sum + r.lengthByCategory[cat], 0).toFixed(0)}
                                   </td>
                                 ))}
                                 <td className="border-2 border-gray-400 p-2 text-right bg-blue-100 text-base whitespace-nowrap min-w-[100px]">
                                   {regionalData
-                                    .filter(region => selectedRegion === 'all' || region.name === selectedRegion)
+                                    .filter(region => isRegionInFilter(region.name))
                                     .reduce((sum, r) => sum + r.totalLength, 0).toFixed(0)}
                                 </td>
                                 {([1, 2, 3, 4, 5] as const).map(cat => (
                                   <td key={`total-funding-${cat}`} className="border-2 border-gray-400 p-2 text-right whitespace-nowrap min-w-[100px]">
                                     {formatNumber(
                                       regionalResults
-                                        .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                                        .filter(r => isRegionInFilter(r.regionName))
                                         .reduce((sum, r) => sum + (r.fundingByCategory?.[cat] || 0), 0)
                                     )}
                                   </td>
@@ -1806,12 +1976,12 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                                 <td className="border-2 border-gray-400 p-2 text-right bg-green-100 text-lg whitespace-nowrap min-w-[120px]">
                                   {formatNumber(
                                     regionalResults
-                                      .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                                      .filter(r => isRegionInFilter(r.regionName))
                                       .reduce((sum, r) => sum + r.totalFunding, 0)
                                   )}
                                 </td>
                                 <td className="border-2 border-gray-400 p-2 text-right bg-yellow-100 text-base whitespace-nowrap min-w-[80px]">
-                                  {selectedRegion === 'all' ? '100.00' : '100.00'}
+                                  100.00
                                 </td>
                               </tr>
                             </tbody>
@@ -1824,33 +1994,30 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                         <div className="text-center p-3 md:p-4 bg-white rounded-lg shadow">
                           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-700">
-                            {selectedRegion === 'all' 
-                              ? regionalResults.length 
-                              : regionalResults.filter(r => r.regionName === selectedRegion).length
-                            }
+                            {getRegionsWithDataCount()}
                           </div>
                           <div className="text-xs sm:text-sm text-gray-600">
-                            {selectedRegion === 'all' ? 'Областей проаналізовано' : 'Областей показано'}
+                            {selectedRegions.length === 0 ? 'Областей проаналізовано' : 'Областей показано'}
                           </div>
                         </div>
                         <div className="text-center p-3 md:p-4 bg-white rounded-lg shadow">
                           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-700">
                             {regionalData
-                              .filter(region => selectedRegion === 'all' || region.name === selectedRegion)
+                              .filter(region => isRegionInFilter(region.name))
                               .reduce((sum, r) => sum + r.totalLength, 0).toFixed(0)}
                           </div>
                           <div className="text-xs sm:text-sm text-gray-600">
-                            {selectedRegion === 'all' ? 'Загальна довжина (км)' : 'Довжина (км)'}
+                            {selectedRegions.length === 0 ? 'Загальна довжина (км)' : 'Довжина (км)'}
                           </div>
                         </div>
                         <div className="text-center p-3 md:p-4 bg-white rounded-lg shadow sm:col-span-2 lg:col-span-1">
                           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-700">
                             {(regionalResults
-                              .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                              .filter(r => isRegionInFilter(r.regionName))
                               .reduce((sum, r) => sum + r.totalFunding, 0) / 1000000).toFixed(2)}
                           </div>
                           <div className="text-xs sm:text-sm text-gray-600">
-                            {selectedRegion === 'all' ? 'Млрд. грн (загалом)' : 'Млрд. грн'}
+                            {selectedRegions.length === 0 ? 'Млрд. грн (загалом)' : 'Млрд. грн'}
                           </div>
                         </div>
                       </div>
@@ -1882,12 +2049,12 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                             
                             <div className="text-center p-3 sm:p-4 bg-white rounded border">
                               <div className="text-xs sm:text-sm text-gray-600 mb-1">
-                                {selectedRegion === 'all' ? 'Витрати на ЕУ' : 'Витрати на ЕУ (фільтр)'}
+                                {selectedRegions.length === 0 ? 'Витрати на ЕУ' : 'Витрати на ЕУ (фільтр)'}
                               </div>
                               <div className="text-base sm:text-lg md:text-2xl font-bold text-red-700 break-all">
                                 {formatNumber(
                                   regionalResults
-                                    .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                                    .filter(r => isRegionInFilter(r.regionName))
                                     .reduce((sum, r) => sum + r.totalFunding, 0)
                                 )} тис. грн
                               </div>
@@ -1898,7 +2065,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                               <div className={`text-base sm:text-lg md:text-2xl font-bold break-all ${
                                 (() => {
                                   const totalEU = regionalResults
-                                    .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                                    .filter(r => isRegionInFilter(r.regionName))
                                     .reduce((sum, r) => sum + r.totalFunding, 0);
                                   const available = roadType === 'state' ? (q1Value || 0) : (q2Value || 0);
                                   const remainder = available - totalEU;
@@ -1907,7 +2074,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                               }`}>
                                 {(() => {
                                   const totalEU = regionalResults
-                                    .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                                    .filter(r => isRegionInFilter(r.regionName))
                                     .reduce((sum, r) => sum + r.totalFunding, 0);
                                   const available = roadType === 'state' ? (q1Value || 0) : (q2Value || 0);
                                   const remainder = available - totalEU;
@@ -1950,17 +2117,19 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                       <div className="space-y-1">
                         <div>
                           Розраховано обсяг фінансування для <strong>
-                            {selectedRegion === 'all' 
+                            {selectedRegions.length === 0 
                               ? `${regionalResults.length} областей` 
-                              : `області ${selectedRegion}`
+                              : selectedRegions.length === 1
+                              ? `області ${selectedRegions[0]}`
+                              : `${selectedRegions.length} обраних областей`
                             }
                           </strong> України.
                         </div>
                         <div>Тип доріг: <strong>{roadType === 'state' ? 'Державного значення' : 'Місцевого значення'}</strong></div>
                         <div>
-                          {selectedRegion === 'all' ? 'Загальна сума' : 'Сума (фільтр)'}: <strong className="text-lg">
+                          {selectedRegions.length === 0 ? 'Загальна сума' : 'Сума (фільтр)'}: <strong className="text-lg">
                             {(regionalResults
-                              .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                              .filter(r => isRegionInFilter(r.regionName))
                               .reduce((sum, r) => sum + r.totalFunding, 0) / 1000000).toFixed(2)} млрд. грн
                           </strong>
                         </div>
@@ -1969,7 +2138,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
                             Залишок на ремонти: <strong className="text-lg">
                               {(() => {
                                 const totalEU = regionalResults
-                                  .filter(r => selectedRegion === 'all' || r.regionName === selectedRegion)
+                                  .filter(r => isRegionInFilter(r.regionName))
                                   .reduce((sum, r) => sum + r.totalFunding, 0);
                                 const available = roadType === 'state' ? (q1Value || 0) : (q2Value || 0);
                                 const remainder = available - totalEU;
@@ -2033,9 +2202,9 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
             </ContextMenuItem>
             <ContextMenuItem
               onClick={() => {
-                const filteredData = selectedRegion === 'all'
+                const filteredData = selectedRegions.length === 0
                   ? regionalData
-                  : regionalData.filter(r => r.name === selectedRegion);
+                  : regionalData.filter(r => selectedRegions.includes(r.name));
                 const dataStr = JSON.stringify(filteredData, null, 2);
                 navigator.clipboard.writeText(dataStr);
                 setUploadStatus('✓ Дані скопійовано в буфер обміну');

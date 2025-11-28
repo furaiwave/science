@@ -69,16 +69,24 @@ const PDFReportBlockTwo: React.FC<PDFReportBlockTwoProps> = ({ className }) => {
       blockTwoState?.regionalResults || blockTwoData?.regionalResults || []
     );
 
-    const selectedRegion = blockTwoState?.selectedRegion || blockTwoData?.selectedRegion || 'all';
+    const selectedRegions = Array.isArray(blockTwoState?.selectedRegions) 
+      ? blockTwoState.selectedRegions 
+      : Array.isArray(blockTwoData?.selectedRegions)
+      ? blockTwoData.selectedRegions
+      : blockTwoState?.selectedRegion || blockTwoData?.selectedRegion
+      ? (blockTwoState?.selectedRegion === 'all' || blockTwoData?.selectedRegion === 'all' || blockTwoState?.selectedRegion === 'Україна' || blockTwoData?.selectedRegion === 'Україна'
+          ? []
+          : [blockTwoState?.selectedRegion || blockTwoData?.selectedRegion || ''])
+      : [];
     const roadType = blockTwoState?.regionalResultsRoadType || blockTwoData?.roadType || null;
     const roadTypeLabel = roadType === 'state' ? 'ДЕРЖАВНИХ' : roadType === 'local' ? 'МІСЦЕВИХ' : '';
 
   // Debug info removed for production
 
-  // Фильтруем результаты по выбранной области
-  const regionalResults: RegionalResult[] = selectedRegion === 'all' || selectedRegion === 'Україна'
+  // Фильтруем результаты по выбранным областям (пустой массив = все области)
+  const regionalResults: RegionalResult[] = selectedRegions.length === 0
     ? allRegionalResults
-    : allRegionalResults.filter((result) => result.regionName === selectedRegion);
+    : allRegionalResults.filter((result) => selectedRegions.includes(result.regionName));
 
   const hasRegionalResults = Boolean(regionalResults.length > 0);
 

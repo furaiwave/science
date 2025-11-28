@@ -24,7 +24,7 @@ export interface BlockTwoState {
   localRoadBaseYear: number; // Рік базового нормативу для місцевих доріг
   localInflationIndexes: number[];
   localRoadRates: RoadRates;
-  selectedRegion: string;
+  selectedRegions: string[]; // Массив выбранных областей, пустой массив = все области
   inflationIndex: number;
   fundingResults: FundingResults | null;
   worksheets: any[];
@@ -56,7 +56,7 @@ const initialState: BlockTwoState = {
     category4: 0,
     category5: 0,
   },
-  selectedRegion: 'all', // ✅ За замовчуванням показуємо всі області
+  selectedRegions: [], // ✅ За замовчуванням показуємо всі області (пустой массив = все)
   inflationIndex: 1.25,
   fundingResults: null,
   worksheets: [],
@@ -117,8 +117,8 @@ const blockTwoSlice = createSlice({
     setLocalRoadRates: (state, action: PayloadAction<RoadRates>) => {
       state.localRoadRates = action.payload;
     },
-    setSelectedRegion: (state, action: PayloadAction<string>) => {
-      state.selectedRegion = action.payload;
+    setSelectedRegions: (state, action: PayloadAction<string[]>) => {
+      state.selectedRegions = action.payload;
     },
     setInflationIndex: (state, action: PayloadAction<number>) => {
       state.inflationIndex = action.payload;
@@ -172,7 +172,7 @@ export const {
   removeLocalInflationIndex,
   updateLocalInflationIndex,
   setLocalRoadRates,
-  setSelectedRegion,
+  setSelectedRegions,
   setInflationIndex,
   setFundingResults,
   setWorksheets,
