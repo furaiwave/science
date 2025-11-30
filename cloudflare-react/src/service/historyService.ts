@@ -324,7 +324,8 @@ class HistoryService {
     regionalData?: any[], // ✅ ДОДАНО
     roadType?: 'state' | 'local', // ✅ ДОДАНО
     stateRoadBaseYear?: number, // ✅ ДОДАНО
-    localRoadBaseYear?: number // ✅ ДОДАНО
+    localRoadBaseYear?: number, // ✅ ДОДАНО
+    selectedRegions?: string[] // ✅ ДОДАНО: масив вибраних областей
   ): Promise<boolean> {
     try {
       const user = await this.getUserSession();
@@ -346,7 +347,8 @@ class HistoryService {
         localRoadBaseYear, // ✅ ДОДАНО
         stateInflationIndexes: [...stateInflationIndexes],
         localInflationIndexes: [...localInflationIndexes],
-        selectedRegion,
+        selectedRegion, // Старий формат (для зворотної сумісності)
+        selectedRegions: selectedRegions ? [...selectedRegions] : undefined, // ✅ ДОДАНО: новий формат
         stateRoadRates: { ...stateRoadRates },
         localRoadRates: { ...localRoadRates },
         fundingResults: { ...fundingResults },

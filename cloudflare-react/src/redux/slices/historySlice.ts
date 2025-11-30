@@ -109,6 +109,7 @@ export const saveBlockTwoData = createAsyncThunk(
     stateInflationIndexes: number[];
     localInflationIndexes: number[];
     selectedRegion: string;
+    selectedRegions?: string[]; // ✅ ДОДАНО: масив вибраних областей
     stateRoadRates: any;
     localRoadRates: any;
     fundingResults: any;
@@ -130,7 +131,8 @@ export const saveBlockTwoData = createAsyncThunk(
       params.regionalData, // ✅ ПЕРЕДАЄМО
       params.roadType, // ✅ ПЕРЕДАЄМО
       params.stateRoadBaseYear, // ✅ ПЕРЕДАЄМО
-      params.localRoadBaseYear // ✅ ПЕРЕДАЄМО
+      params.localRoadBaseYear, // ✅ ПЕРЕДАЄМО
+      params.selectedRegions // ✅ ПЕРЕДАЄМО: масив вибраних областей
     );
     if (success) {
       return await historyService.getCurrentSession();

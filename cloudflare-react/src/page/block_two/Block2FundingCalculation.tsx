@@ -866,7 +866,8 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
           ? 'all' 
           : selectedRegions.length === 1 
           ? selectedRegions[0] 
-          : selectedRegions.join(', '),
+          : selectedRegions.join(', '), // Старий формат (для зворотної сумісності)
+        selectedRegions: selectedRegions.length > 0 ? [...selectedRegions] : undefined, // ✅ Новий формат (масив)
         stateRoadRates: stateRates,
         localRoadRates: localRates,
         fundingResults: {

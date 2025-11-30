@@ -653,7 +653,9 @@ function getRegionalCostFactor(region: string): number {
 }
 
 /**
- * 4.2.5 - Детальний аналіз витрат та вигод (Додаток 11)
+ * 4.2.5 - Детальний аналіз витрат та вигод (Додаток 10)
+ * Аналіз витрат та вигод від спрямування фінансових ресурсів на реконструкцію 
+ * або капітальний ремонт автомобільних доріг загального користування
  */
 export function performDetailedCostBenefitAnalysis(
   section: RoadSection,
