@@ -29,10 +29,12 @@ export interface BlockTwoState {
   fundingResults: FundingResults | null;
   worksheets: any[];
   selectedWorksheet: string;
-  regionalData: any[];
+  regionalData: any[]; // ⚠️ DEPRECATED: використовуйте stateRegionalData або localRegionalData
   regionalResults: any[];
   regionalResultsRoadType: 'state' | 'local' | null; // Тип доріг для regionalResults
   isEditingTable: boolean; // ✅ Стан редагування таблиці
+  stateRegionalData: any[]; // ✅ Дані для державних доріг
+  localRegionalData: any[]; // ✅ Дані для місцевих доріг
 }
 
 const initialState: BlockTwoState = {
@@ -65,6 +67,8 @@ const initialState: BlockTwoState = {
   regionalResults: [],
   regionalResultsRoadType: null,
   isEditingTable: false, // ✅ За замовчуванням редагування вимкнено
+  stateRegionalData: [], // ✅ Дані для державних доріг
+  localRegionalData: [], // ✅ Дані для місцевих доріг
 };
 
 const blockTwoSlice = createSlice({
@@ -133,8 +137,17 @@ const blockTwoSlice = createSlice({
       state.selectedWorksheet = action.payload;
     },
     setRegionalData: (state, action: PayloadAction<any[]>) => {
-      // ✅ СЕРІАЛІЗАЦІЯ: видаляємо функції та некоректні дані
+      // ⚠️ DEPRECATED: використовуйте setStateRegionalData або setLocalRegionalData
+      // Зберігаємо для зворотньої сумісності
       state.regionalData = JSON.parse(JSON.stringify(action.payload));
+    },
+    setStateRegionalData: (state, action: PayloadAction<any[]>) => {
+      // ✅ Встановлює дані для державних доріг
+      state.stateRegionalData = JSON.parse(JSON.stringify(action.payload));
+    },
+    setLocalRegionalData: (state, action: PayloadAction<any[]>) => {
+      // ✅ Встановлює дані для місцевих доріг
+      state.localRegionalData = JSON.parse(JSON.stringify(action.payload));
     },
     setRegionalResults: (state, action: PayloadAction<any[]>) => {
       // ✅ СЕРІАЛІЗАЦІЯ: видаляємо функції та некоректні дані
@@ -146,6 +159,8 @@ const blockTwoSlice = createSlice({
     clearRegionalData: (state) => {
       // ✅ ОЧИЩЕННЯ: видаляємо всі регіональні дані
       state.regionalData = [];
+      state.stateRegionalData = [];
+      state.localRegionalData = [];
       state.regionalResults = [];
       state.regionalResultsRoadType = null;
       state.isEditingTable = false;
@@ -178,6 +193,8 @@ export const {
   setWorksheets,
   setSelectedWorksheet,
   setRegionalData,
+  setStateRegionalData,
+  setLocalRegionalData,
   setRegionalResults,
   setRegionalResultsRoadType,
   clearRegionalData,

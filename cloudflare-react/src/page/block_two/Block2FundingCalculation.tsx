@@ -24,6 +24,8 @@ import {
   setRegionalResultsRoadType as setRegionalResultsRoadTypeAction,
   setSelectedRegions as setSelectedRegionsAction,
   setRegionalData as setRegionalDataAction,
+  setStateRegionalData as setStateRegionalDataAction,
+  setLocalRegionalData as setLocalRegionalDataAction,
   clearRegionalData as clearRegionalDataAction,
   setIsEditingTable as setIsEditingTableAction
 } from '@/redux/slices/blockTwoSlice';
@@ -105,9 +107,12 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
 
   // ✅ ЧИТАЄМО З REDUX (збережені дані)
   const blockTwoState = useAppSelector(state => state.blockTwo);
-  const savedRegionalData = Array.isArray(blockTwoState.regionalData) ? blockTwoState.regionalData : [];
-  const savedRegionalResults = Array.isArray(blockTwoState.regionalResults) ? blockTwoState.regionalResults : [];
   const savedRoadType = blockTwoState.regionalResultsRoadType || 'state';
+  // ✅ ВИБИРАЄМО ПРАВИЛЬНІ ДАНІ В ЗАЛЕЖНОСТІ ВІД ТИПУ ДОРІГ
+  const savedRegionalData = savedRoadType === 'state' 
+    ? (Array.isArray(blockTwoState.stateRegionalData) ? blockTwoState.stateRegionalData : [])
+    : (Array.isArray(blockTwoState.localRegionalData) ? blockTwoState.localRegionalData : []);
+  const savedRegionalResults = Array.isArray(blockTwoState.regionalResults) ? blockTwoState.regionalResults : [];
   const savedSelectedRegions = Array.isArray(blockTwoState.selectedRegions) ? blockTwoState.selectedRegions : [];
 
   // ✅ ВИПРАВЛЕНО: НЕ ініціалізуємо з Redux, а тільки через useEffect
@@ -131,6 +136,35 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
     console.log('📝 isEditing змінено:', isEditing);
     console.log('📝 Redux isEditingTable:', blockTwoState.isEditingTable);
   }, [isEditing, blockTwoState.isEditingTable]);
+
+  // ✅ ВІДНОВЛЕННЯ ДАНИХ З ІСТОРІЇ В REDUX
+  useEffect(() => {
+    if (currentSession?.blockTwoData) {
+      const blockTwoData = currentSession.blockTwoData;
+      console.log('📥 Відновлення даних з історії:', {
+        hasStateRegionalData: !!blockTwoData.stateRegionalData,
+        hasLocalRegionalData: !!blockTwoData.localRegionalData,
+        roadType: blockTwoData.roadType
+      });
+
+      // Відновлюємо дані в Redux, якщо вони є
+      if (blockTwoData.stateRegionalData && blockTwoData.stateRegionalData.length > 0) {
+        dispatch(setStateRegionalDataAction(blockTwoData.stateRegionalData));
+      }
+      if (blockTwoData.localRegionalData && blockTwoData.localRegionalData.length > 0) {
+        dispatch(setLocalRegionalDataAction(blockTwoData.localRegionalData));
+      }
+      if (blockTwoData.regionalResults && blockTwoData.regionalResults.length > 0) {
+        dispatch(setRegionalResultsAction(blockTwoData.regionalResults));
+      }
+      if (blockTwoData.roadType) {
+        dispatch(setRegionalResultsRoadTypeAction(blockTwoData.roadType));
+      }
+      if (blockTwoData.selectedRegions) {
+        dispatch(setSelectedRegionsAction(blockTwoData.selectedRegions));
+      }
+    }
+  }, [currentSession?.blockTwoData, dispatch]);
 
   // ✅ СИНХРОНІЗАЦІЯ З REDUX (відслідковуємо зміни Redux state)
   useEffect(() => {
@@ -472,9 +506,14 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
         }
         
         setRegionalData(parsedData);
-        // ✅ ЗБЕРІГАЄМО В REDUX
-        dispatch(setRegionalDataAction(parsedData));
-        setUploadStatus(`✓ Успішно завантажено дані для ${parsedData.length} областей`);
+        // ✅ ЗБЕРІГАЄМО В REDUX В ЗАЛЕЖНОСТІ ВІД ТИПУ ДОРІГ
+        if (roadType === 'state') {
+          dispatch(setStateRegionalDataAction(parsedData));
+        } else {
+          dispatch(setLocalRegionalDataAction(parsedData));
+        }
+        const roadTypeLabel = roadType === 'state' ? 'державних' : 'місцевих';
+        setUploadStatus(`✓ Успішно завантажено дані для ${parsedData.length} областей (${roadTypeLabel} доріг)`);
         setTimeout(() => setUploadStatus(''), 3000);
         
       } catch (error) {
@@ -564,8 +603,14 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
           }
 
           setRegionalData(parsedData);
-          dispatch(setRegionalDataAction(parsedData));
-          setUploadStatus(`✓ Успішно завантажено дані для ${parsedData.length} областей`);
+          // ✅ ЗБЕРІГАЄМО В REDUX В ЗАЛЕЖНОСТІ ВІД ТИПУ ДОРІГ
+          if (roadType === 'state') {
+            dispatch(setStateRegionalDataAction(parsedData));
+          } else {
+            dispatch(setLocalRegionalDataAction(parsedData));
+          }
+          const roadTypeLabel = roadType === 'state' ? 'державних' : 'місцевих';
+          setUploadStatus(`✓ Успішно завантажено дані для ${parsedData.length} областей (${roadTypeLabel} доріг)`);
           setTimeout(() => setUploadStatus(''), 3000);
 
         } catch (error) {
@@ -876,14 +921,16 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
           totalFunding
         },
         regionalResults: regionalResults, // ✅ ДОДАЄМО РЕГІОНАЛЬНІ РЕЗУЛЬТАТИ
-        regionalData: regionalData, // ✅ ДОДАЄМО ВИХІДНІ ДАНІ
+        stateRegionalData: blockTwoState.stateRegionalData, // ✅ ДОДАЄМО ДАНІ ДЕРЖАВНИХ ДОРІГ
+        localRegionalData: blockTwoState.localRegionalData, // ✅ ДОДАЄМО ДАНІ МІСЦЕВИХ ДОРІГ
         roadType: roadType // ✅ ДОДАЄМО ТИП ДОРІГ
       };
       
       console.log('💾 Збереження Block 2 даних:', {
         sessionId: dataToSave.sessionId,
         regionalResultsLength: regionalResults.length,
-        regionalDataLength: regionalData.length,
+        stateRegionalDataLength: blockTwoState.stateRegionalData.length,
+        localRegionalDataLength: blockTwoState.localRegionalData.length,
         roadType: roadType,
         selectedRegion: selectedRegions.length === 0 
           ? 'all' 
@@ -943,6 +990,19 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
     prevRoadTypeRef.current = roadType;
     dispatch(setRegionalResultsRoadTypeAction(roadType));
   }, [roadType, dispatch]);
+
+  // ✅ ЗАВАНТАЖУЄМО ПРАВИЛЬНІ ДАНІ ПРИ ЗМІНІ ТИПУ ДОРІГ
+  React.useEffect(() => {
+    console.log('🔄 Зміна типу доріг, завантаження даних:', roadType);
+    const dataToLoad = roadType === 'state' 
+      ? (Array.isArray(blockTwoState.stateRegionalData) ? blockTwoState.stateRegionalData : [])
+      : (Array.isArray(blockTwoState.localRegionalData) ? blockTwoState.localRegionalData : []);
+    
+    if (JSON.stringify(regionalData) !== JSON.stringify(dataToLoad)) {
+      console.log('   📥 Завантажено', dataToLoad.length, 'областей для', roadType === 'state' ? 'державних' : 'місцевих', 'доріг');
+      setRegionalData(dataToLoad);
+    }
+  }, [roadType, blockTwoState.stateRegionalData, blockTwoState.localRegionalData]);
 
   // ==================== RENDER ====================
 

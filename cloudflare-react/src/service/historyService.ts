@@ -54,7 +54,9 @@ export interface BlockTwoHistoryData {
     totalFunding: number;
   };
   regionalResults?: any[]; // ✅ ДОДАНО: результати по областях
-  regionalData?: any[]; // ✅ ДОДАНО: вихідні дані по областях
+  regionalData?: any[]; // ⚠️ DEPRECATED: використовуйте stateRegionalData або localRegionalData
+  stateRegionalData?: any[]; // ✅ ДОДАНО: вихідні дані для державних доріг
+  localRegionalData?: any[]; // ✅ ДОДАНО: вихідні дані для місцевих доріг
   roadType?: 'state' | 'local'; // ✅ ДОДАНО: тип доріг
   status: 'completed' | 'in_progress' | 'failed';
 }
@@ -321,11 +323,13 @@ class HistoryService {
     localRoadRates: any,
     fundingResults: any,
     regionalResults?: any[], // ✅ ДОДАНО
-    regionalData?: any[], // ✅ ДОДАНО
+    regionalData?: any[], // ⚠️ DEPRECATED
     roadType?: 'state' | 'local', // ✅ ДОДАНО
     stateRoadBaseYear?: number, // ✅ ДОДАНО
     localRoadBaseYear?: number, // ✅ ДОДАНО
-    selectedRegions?: string[] // ✅ ДОДАНО: масив вибраних областей
+    selectedRegions?: string[], // ✅ ДОДАНО: масив вибраних областей
+    stateRegionalData?: any[], // ✅ ДОДАНО: дані для державних доріг
+    localRegionalData?: any[] // ✅ ДОДАНО: дані для місцевих доріг
   ): Promise<boolean> {
     try {
       const user = await this.getUserSession();
@@ -353,7 +357,9 @@ class HistoryService {
         localRoadRates: { ...localRoadRates },
         fundingResults: { ...fundingResults },
         regionalResults: regionalResults ? [...regionalResults] : undefined, // ✅ ДОДАНО
-        regionalData: regionalData ? [...regionalData] : undefined, // ✅ ДОДАНО
+        regionalData: regionalData ? [...regionalData] : undefined, // ⚠️ DEPRECATED
+        stateRegionalData: stateRegionalData ? [...stateRegionalData] : undefined, // ✅ ДОДАНО
+        localRegionalData: localRegionalData ? [...localRegionalData] : undefined, // ✅ ДОДАНО
         roadType: roadType || undefined, // ✅ ДОДАНО
         status: 'completed'
       };
@@ -361,10 +367,13 @@ class HistoryService {
       console.log('💾 Збереження Block 2 в історію:', {
         hasRegionalResults: !!blockTwoData.regionalResults,
         regionalResultsLength: blockTwoData.regionalResults?.length || 0,
-        hasRegionalData: !!blockTwoData.regionalData,
-        regionalDataLength: blockTwoData.regionalData?.length || 0,
+        hasStateRegionalData: !!blockTwoData.stateRegionalData,
+        stateRegionalDataLength: blockTwoData.stateRegionalData?.length || 0,
+        hasLocalRegionalData: !!blockTwoData.localRegionalData,
+        localRegionalDataLength: blockTwoData.localRegionalData?.length || 0,
         roadType: blockTwoData.roadType,
-        selectedRegion: blockTwoData.selectedRegion
+        selectedRegion: blockTwoData.selectedRegion,
+        selectedRegions: blockTwoData.selectedRegions
       });
 
       session.blockTwoData = blockTwoData;

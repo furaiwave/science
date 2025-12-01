@@ -114,7 +114,9 @@ export const saveBlockTwoData = createAsyncThunk(
     localRoadRates: any;
     fundingResults: any;
     regionalResults?: any[]; // ✅ ДОДАНО
-    regionalData?: any[]; // ✅ ДОДАНО
+    regionalData?: any[]; // ⚠️ DEPRECATED
+    stateRegionalData?: any[]; // ✅ ДОДАНО
+    localRegionalData?: any[]; // ✅ ДОДАНО
     roadType?: 'state' | 'local'; // ✅ ДОДАНО
   }) => {
     const success = await historyService.saveBlockTwoData(
@@ -128,11 +130,13 @@ export const saveBlockTwoData = createAsyncThunk(
       params.localRoadRates,
       params.fundingResults,
       params.regionalResults, // ✅ ПЕРЕДАЄМО
-      params.regionalData, // ✅ ПЕРЕДАЄМО
+      params.regionalData, // ⚠️ DEPRECATED
       params.roadType, // ✅ ПЕРЕДАЄМО
       params.stateRoadBaseYear, // ✅ ПЕРЕДАЄМО
       params.localRoadBaseYear, // ✅ ПЕРЕДАЄМО
-      params.selectedRegions // ✅ ПЕРЕДАЄМО: масив вибраних областей
+      params.selectedRegions, // ✅ ПЕРЕДАЄМО: масив вибраних областей
+      params.stateRegionalData, // ✅ ПЕРЕДАЄМО
+      params.localRegionalData // ✅ ПЕРЕДАЄМО
     );
     if (success) {
       return await historyService.getCurrentSession();
