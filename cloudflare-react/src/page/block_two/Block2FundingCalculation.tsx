@@ -457,10 +457,8 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
     });
   };
 
-  const handleTemplateUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target?.files?.[0];
-    if (!file) return;
-
+  // ✅ Спільна функція для обробки Excel файлу (DRY - Don't Repeat Yourself)
+  const processExcelFile = (file: File) => {
     setUploadStatus('Завантажуємо шаблон...');
     
     const reader = new FileReader();
@@ -526,6 +524,12 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
     reader.readAsBinaryString(file);
   };
 
+  const handleTemplateUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    processExcelFile(file);
+  };
+
   // ==================== DRAG AND DROP ОБРОБНИКИ ====================
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -557,70 +561,8 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
         return;
       }
 
-      // Обробка файлу через існуючу логіку
-      setUploadStatus('Завантажуємо шаблон...');
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const data = e.target?.result;
-          const workbook = XLSX.read(data, { type: 'binary' });
-
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as (string | number)[][];
-
-          const parsedData: RegionalRoadData[] = [];
-
-          for (let i = 2; i < jsonData.length; i++) {
-            const row = jsonData[i];
-            if (!row[0]) continue;
-
-            const regionData: RegionalRoadData = {
-              name: String(row[0]),
-              lengthByCategory: {
-                1: parseExcelNumber(row[1], 1),
-                2: parseExcelNumber(row[2], 1),
-                3: parseExcelNumber(row[3], 1),
-                4: parseExcelNumber(row[4], 1),
-                5: parseExcelNumber(row[5], 1),
-              },
-              totalLength: parseExcelNumber(row[6], 1),
-              europeanIndexLength: parseExcelNumber(row[7], 1),
-              lengthByIntensity: {
-                medium: parseExcelNumber(row[8], 1),
-                high: parseExcelNumber(row[9], 1),
-                veryHigh: parseExcelNumber(row[10], 1),
-              },
-              borderCrossingLength: parseExcelNumber(row[11], 1),
-              lightingLength: parseExcelNumber(row[12], 1),
-              repairedLength: parseExcelNumber(row[13], 1),
-              criticalInfraCount: parseExcelNumber(row[14], 0),
-            };
-
-            parsedData.push(regionData);
-          }
-
-          setRegionalData(parsedData);
-          // ✅ ЗБЕРІГАЄМО В REDUX В ЗАЛЕЖНОСТІ ВІД ТИПУ ДОРІГ
-          if (roadType === 'state') {
-            dispatch(setStateRegionalDataAction(parsedData));
-          } else {
-            dispatch(setLocalRegionalDataAction(parsedData));
-          }
-          const roadTypeLabel = roadType === 'state' ? 'державних' : 'місцевих';
-          setUploadStatus(`✓ Успішно завантажено дані для ${parsedData.length} областей (${roadTypeLabel} доріг)`);
-          setTimeout(() => setUploadStatus(''), 3000);
-
-        } catch (error) {
-          console.error('Помилка парсингу Excel:', error);
-          setUploadStatus('❌ Помилка при завантаженні файлу. Перевірте формат.');
-          setTimeout(() => setUploadStatus(''), 5000);
-        }
-      };
-
-      reader.readAsBinaryString(file);
+      // ✅ Використовуємо спільну функцію
+      processExcelFile(file);
     }
   };
 
@@ -976,7 +918,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
   // ✅ ВИПРАВЛЕНО: Очищаємо результати ТІЛЬКИ при ЗМІНІ типу доріг користувачем
   // НЕ очищаємо при ініціалізації з Redux!
   const prevRoadTypeRef = useRef<RoadType>(roadType);
-  React.useEffect(() => {
+  useEffect(() => {
     // Перевіряємо чи це справді зміна користувача, а не синхронізація з Redux
     if (prevRoadTypeRef.current !== roadType && regionalResults.length > 0) {
       const savedType = blockTwoState.regionalResultsRoadType;
@@ -992,7 +934,7 @@ const Block2FundingCalculation: React.FC<Block2FundingCalculationProps> = ({
   }, [roadType, dispatch]);
 
   // ✅ ЗАВАНТАЖУЄМО ПРАВИЛЬНІ ДАНІ ПРИ ЗМІНІ ТИПУ ДОРІГ
-  React.useEffect(() => {
+  useEffect(() => {
     console.log('🔄 Зміна типу доріг, завантаження даних:', roadType);
     const dataToLoad = roadType === 'state' 
       ? (Array.isArray(blockTwoState.stateRegionalData) ? blockTwoState.stateRegionalData : [])
